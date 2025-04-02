@@ -1,5 +1,5 @@
 package Modele;
-import java.util.*
+import java.util.*;
 
 public class Candidature {
     private int id;

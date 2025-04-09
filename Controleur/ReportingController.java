@@ -19,7 +19,7 @@ public class ReportingController {
         this.agenceRecrutementDAO = agenceRecrutementDAO;
     }
 
-    public Map<String, Integer> générerRapportEmploisPopulaires() {
+    public Map<String, Integer> genererRapportEmploisPopulaires() {
         Map<String, Integer> rapport = new HashMap<>();
         List<Map<String, Object>> stats = offreEmploiDAO.findTopOffres();
         for (Map<String, Object> entry : stats) {
@@ -30,26 +30,26 @@ public class ReportingController {
         return rapport;
     }
 
-    public Map<String, Integer> générerRapportCandidatures() {
+    public Map<String, Integer> genererRapportCandidatures() {
         Map<String, Integer> rapport = new HashMap<>();
         int enAttente = candidatureDAO.countByStatut("en attente");
-        int acceptees = candidatureDAO.countByStatut("acceptée");
-        int refusees = candidatureDAO.countByStatut("refusée");
+        int acceptees = candidatureDAO.countByStatut("acceptï¿½e");
+        int refusees = candidatureDAO.countByStatut("refusï¿½e");
 
         rapport.put("En attente", enAttente);
-        rapport.put("Acceptées", acceptees);
-        rapport.put("Refusées", refusees);
+        rapport.put("Acceptï¿½es", acceptees);
+        rapport.put("Refusï¿½es", refusees);
 
         return rapport;
     }
 
-    public Map<String, Integer> générerRapportActivitéAgence(int idAgence) {
+    public Map<String, Integer> genererRapportActiviteAgence(int idAgence) {
         Map<String, Integer> rapport = new HashMap<>();
-        int offresPubliées = offreEmploiDAO.countByAgence(idAgence);
-        int candidaturesReçues = candidatureDAO.countByAgence(idAgence);
+        int offresPubliees = offreEmploiDAO.countByAgence(idAgence);
+        int candidaturesRecues = candidatureDAO.countByAgence(idAgence);
 
-        rapport.put("Offres publiées", offresPubliées);
-        rapport.put("Candidatures reçues", candidaturesReçues);
+        rapport.put("Offres publiï¿½es", offresPubliees);
+        rapport.put("Candidatures reï¿½ues", candidaturesRecues);
 
         return rapport;
     }

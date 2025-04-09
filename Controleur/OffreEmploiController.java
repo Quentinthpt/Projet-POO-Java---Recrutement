@@ -13,7 +13,7 @@ public class OffreEmploiController {
             this.categorieDAO = categorieDAO;
         }
 
-        public boolean créerOffre(OffreEmploi offre) {
+        public boolean creerOffre(OffreEmploi offre) {
             return false;
         }
 

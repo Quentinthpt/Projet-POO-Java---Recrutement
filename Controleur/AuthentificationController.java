@@ -14,19 +14,19 @@ public class AuthentificationController {
         return utilisateurDAO;
     }
     public Utilisateur connecter(String login, String password) {
-        // Implémentation à faire
+        // Implï¿½mentation ï¿½ faire
         return null;
     }
     public boolean inscrire(Utilisateur utilisateur){
         return false;
     }
     public boolean deconnecter() {
-        // Implémentation à faire
+        // Implï¿½mentation ï¿½ faire
         return false;
     }
 
-    public boolean récupérerMotDePasse(String email) {
-        // Implémentation à faire
+    public boolean recupererMotDePasse(String email) {
+        // Implï¿½mentation ï¿½ faire
         return false;
     }
 }

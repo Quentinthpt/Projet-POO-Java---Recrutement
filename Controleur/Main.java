@@ -15,8 +15,9 @@ import javafx.stage.Stage;
 
 public class Main {
     public static void main(String[] args) {
-        MainPage.main(args);
+        //MainPage.main(args);
         //launch(args);
-        //new MainPage();
+        new MainPage();
+
     }
 }

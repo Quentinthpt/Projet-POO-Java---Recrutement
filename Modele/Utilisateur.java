@@ -15,6 +15,8 @@ public class Utilisateur {
     private String type;
     public Date dateInscription;
 
+    public Utilisateur(DemandeurEmploi user) {
+    }
 
 
     public int getId() {

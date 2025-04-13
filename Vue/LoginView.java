@@ -2,6 +2,7 @@ package Vue;
 
 import DAO.UtilisateurDAO;
 import DAO.UtilisateurDAOImpl;
+import Modele.DemandeurEmploi;
 import Modele.Utilisateur;
 
 import javax.swing.*;
@@ -55,7 +56,13 @@ public class LoginView extends JFrame {
             if (user != null) {
                 JOptionPane.showMessageDialog(this, "Bienvenue " + user.getPrenom() + "(" + user.getType() + ")");
                 dispose();
-                new MainPage();
+                //new MainPage();
+                if (user instanceof DemandeurEmploi) {
+                    new DemandeurEmploi((DemandeurEmploi) user);
+                }
+                else{
+                    new MainPage();
+                }
             } else {
                 JOptionPane.showMessageDialog(this, "Échec de la connexion.");
             }

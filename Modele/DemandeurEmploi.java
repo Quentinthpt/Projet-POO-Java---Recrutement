@@ -13,6 +13,10 @@ public class DemandeurEmploi extends Utilisateur{
         super(nom, prenom, age, email, adresse, experience, cv, motDePasse, type);
     }
 
+    public DemandeurEmploi(DemandeurEmploi user) {
+        super(user);
+    }
+
     public String getLienCv() {
             return lienCv;
     }

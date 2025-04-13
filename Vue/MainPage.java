@@ -66,8 +66,40 @@ public class MainPage extends JFrame {
 
         JPanel rightMenu = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 5));
         rightMenu.setBackground(blanc);
+        //rightMenu.add(new JLabel("♡ 0"));
+        //rightMenu.add(new JLabel("👤 mon compte"));
+
+        JLabel monCompteLabel = new JLabel("👤 mon compte");
+        monCompteLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+// Créer le popup menu
+        JPopupMenu popupMenu = new JPopupMenu();
+        JMenuItem menuConnexion = new JMenuItem("Connexion");
+        JMenuItem menuInscription = new JMenuItem("Inscription");
+
+        popupMenu.add(menuConnexion);
+        popupMenu.add(menuInscription);
+
+// Ouvrir le menu au clic
+        monCompteLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                popupMenu.show(monCompteLabel, evt.getX(), evt.getY());
+            }
+        });
+
         rightMenu.add(new JLabel("♡ 0"));
-        rightMenu.add(new JLabel("👤 mon compte"));
+        rightMenu.add(monCompteLabel);
+
+        menuConnexion.addActionListener(e -> {
+            dispose(); // ferme MainPage
+            new LoginView("connexion"); // ouvre LoginView en mode Connexion
+        });
+
+        menuInscription.addActionListener(e -> {
+            dispose(); // ferme MainPage
+            new LoginView("inscription"); // ouvre LoginView en mode Inscription
+        });
+
 
         topNav.add(logoLabel, BorderLayout.WEST);
         topNav.add(menuPanel, BorderLayout.CENTER);

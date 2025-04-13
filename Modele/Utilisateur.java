@@ -8,7 +8,12 @@ public class Utilisateur {
     private String prenom;
     private String email;
     private String motDePasse;
+    private int age;
+    private String adresse;
+    private String experience;
+    private String cv;
     public Date dateInscription;
+
 
     public int getId() {
         return id;
@@ -25,6 +30,10 @@ public class Utilisateur {
     public String getMotDePasse() {
         return motDePasse;
     }
+    public int getAge() {return age;}
+    public String getAdresse() {return adresse;}
+    public String getExperience() {return experience;}
+    public String getCv() {return cv;}
     public Date getDateInscription() {
         return dateInscription;
     }
@@ -46,5 +55,24 @@ public class Utilisateur {
     public void setDateInscription(Date dateInscription) {
         this.dateInscription = dateInscription;
     }
+
+    public Utilisateur(String nom, String prenom, String email, String motDePasse) {
+        this.nom = nom;
+        this.prenom = prenom;
+        this.email = email;
+        this.motDePasse = motDePasse;
+    }
+
+    public Utilisateur(String nom, String prenom, int age, String email, String adresse, String experience, String cv, String motDePasse) {
+        this.nom = nom;
+        this.prenom = prenom;
+        this.email = email;
+        this.motDePasse = motDePasse;
+        this.age = age;
+        this.adresse = adresse;
+        this.experience = experience;
+        this.cv = cv;
+    }
+
 
 }

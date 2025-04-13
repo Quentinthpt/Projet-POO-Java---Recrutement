@@ -7,8 +7,8 @@ public class AgenceRecrutement extends Utilisateur{
     private String secteurActivite;
     private String description;
 
-    public AgenceRecrutement(String nom, String prenom, String email, String motDePasse) {
-        super(nom, prenom, email, motDePasse);
+    public AgenceRecrutement(String nom, String prenom, String email, String motDePasse, String type) {
+        super(nom, prenom, email, motDePasse, type);
     }
 
     public String getNomAgence() {

@@ -53,7 +53,7 @@ public class LoginView extends JFrame {
                 throw new RuntimeException(ex);
             }
             if (user != null) {
-                JOptionPane.showMessageDialog(this, "Bienvenue " + user.getPrenom());
+                JOptionPane.showMessageDialog(this, "Bienvenue " + user.getPrenom() + "(" + user.getType() + ")");
                 dispose();
                 new MainPage();
             } else {
@@ -100,7 +100,7 @@ public class LoginView extends JFrame {
                         adresseField.getText(),
                         experienceField.getText(),
                         cvField.getText(),
-                        new String(passwordField.getPassword())
+                        new String(passwordField.getPassword()), "Demandeur"
                 );
                 boolean success = dao.inscrireDemandeur(user);
 

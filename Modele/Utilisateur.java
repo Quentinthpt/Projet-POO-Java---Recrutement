@@ -12,7 +12,9 @@ public class Utilisateur {
     private String adresse;
     private String experience;
     private String cv;
+    private String type;
     public Date dateInscription;
+
 
 
     public int getId() {
@@ -34,6 +36,7 @@ public class Utilisateur {
     public String getAdresse() {return adresse;}
     public String getExperience() {return experience;}
     public String getCv() {return cv;}
+    public String getType() {return type;}
     public Date getDateInscription() {
         return dateInscription;
     }
@@ -56,14 +59,15 @@ public class Utilisateur {
         this.dateInscription = dateInscription;
     }
 
-    public Utilisateur(String nom, String prenom, String email, String motDePasse) {
+    public Utilisateur(String nom, String prenom, String email, String motDePasse, String type) {
         this.nom = nom;
         this.prenom = prenom;
         this.email = email;
         this.motDePasse = motDePasse;
+        this.type = type;
     }
 
-    public Utilisateur(String nom, String prenom, int age, String email, String adresse, String experience, String cv, String motDePasse) {
+    public Utilisateur(String nom, String prenom, int age, String email, String adresse, String experience, String cv, String motDePasse, String type) {
         this.nom = nom;
         this.prenom = prenom;
         this.email = email;
@@ -72,6 +76,7 @@ public class Utilisateur {
         this.adresse = adresse;
         this.experience = experience;
         this.cv = cv;
+        this.type = "Demandeur";
     }
 
 

@@ -9,8 +9,8 @@ public class DemandeurEmploi extends Utilisateur{
     private Date date;
     private String typeUtilisateur;
 
-    public DemandeurEmploi(String nom, String prenom, int age, String email, String adresse, String experience, String cv, String motDePasse) {
-        super(nom, prenom, age, email, adresse, experience, cv, motDePasse);
+    public DemandeurEmploi(String nom, String prenom, int age, String email, String adresse, String experience, String cv, String motDePasse, String type) {
+        super(nom, prenom, age, email, adresse, experience, cv, motDePasse, type);
     }
 
     public String getLienCv() {

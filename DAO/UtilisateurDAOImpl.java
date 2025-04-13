@@ -28,7 +28,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
             ps.setString(2, password);
             ResultSet rs = ps.executeQuery();
             if (rs.next()){
-                return new Utilisateur(rs.getString("nom_admin"), rs.getString("prenom_admin"), email, password);
+                return new Utilisateur(rs.getString("nom_admin"), rs.getString("prenom_admin"), email, password, "Admin");
             }
         } catch(SQLException e){
             e.printStackTrace();
@@ -44,7 +44,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
             ps.setString(2, password);
             ResultSet rs = ps.executeQuery();
             if (rs.next()){
-                return new Utilisateur(rs.getString("nom_demandeur"), rs.getString("prenom_demandeur"), email, password);
+                return new Utilisateur(rs.getString("nom_demandeur"), rs.getString("prenom_demandeur"), email, password, "Demandeur");
             }
         } catch (SQLException e){
             e.printStackTrace();

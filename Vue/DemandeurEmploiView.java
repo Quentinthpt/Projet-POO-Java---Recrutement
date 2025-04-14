@@ -18,6 +18,7 @@ public class DemandeurEmploiView extends JFrame{
 
         Color bleuFonce = new Color(9, 18, 66);
         Color bleuClair = new Color(45, 132, 255);
+        Color fond_bas = new Color(155, 182, 243);
         Color blanc = Color.WHITE;
 
         JPanel mainPanel = new JPanel(new BorderLayout());
@@ -98,8 +99,32 @@ public class DemandeurEmploiView extends JFrame{
         welcome.setHorizontalAlignment(SwingConstants.CENTER);
         welcome.setBorder(new EmptyBorder(40, 10, 10, 10));
 
+        // Texte bas de page
+        JTextArea texte_bas_page;
+        String text = "MatchaJob, Un job à ton goût… vertueux comme du matcha\n\n" +
+                "Contact: \n" +
+                "10 rue Sextius Michel, 75010 Paris, France\n" +
+                "Mail: contact@matchajob.com\n" +
+                "Téléphone: +33 (0) 6 15 08 75 05\n";
+        texte_bas_page = new JTextArea(text);
+        texte_bas_page.setEditable(false);
+        texte_bas_page.setBackground(fond_bas);
+        texte_bas_page.setLineWrap(true);
+        texte_bas_page.setWrapStyleWord(true);
+        texte_bas_page.setFocusable(false);
+        texte_bas_page.setBorder(new EmptyBorder(10, 20, 10, 20));
+        texte_bas_page.setFont(new Font("SansSerif", Font.PLAIN, 10));
+
+        JPanel contentPanel = new JPanel();
+        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+        contentPanel.setBackground(bleuFonce);
+        contentPanel.add(Box.createVerticalStrut(20));
+        contentPanel.add(texte_bas_page);
+
+
         mainPanel.add(topNav, BorderLayout.NORTH);
         mainPanel.add(welcome, BorderLayout.CENTER);
+        mainPanel.add(contentPanel, BorderLayout.SOUTH);
 
         add(mainPanel);
         setVisible(true);

@@ -33,6 +33,7 @@ public class MainPage extends JFrame {
         // Couleurs principales
         Color bleuFonce = new Color(9, 18, 66);
         Color bleuClair = new Color(45, 132, 255);
+        Color fond_bas = new Color(155, 182, 243);
         Color blanc = Color.WHITE;
 
         // Panel principal avec fond bleu foncé
@@ -105,7 +106,7 @@ public class MainPage extends JFrame {
         topNav.add(menuPanel, BorderLayout.CENTER);
         topNav.add(rightMenu, BorderLayout.EAST);
 
-        // Zone de recherche
+        /*// Zone de recherche
         JPanel searchPanel = new JPanel();
         searchPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 15, 20));
         searchPanel.setBackground(bleuFonce);
@@ -121,7 +122,34 @@ public class MainPage extends JFrame {
         searchPanel.add(jobField);
         searchPanel.add(locationField);
         searchPanel.add(distanceBox);
-        searchPanel.add(searchButton);
+        searchPanel.add(searchButton);*/
+
+        // Corps de la page
+        JPanel corps_de_la_page = new JPanel(new GridLayout(2, 2, 15, 10));
+        corps_de_la_page.setBackground(bleuFonce);
+        corps_de_la_page.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+        // Case 1.1
+        ImageIcon corps_1_1 = new ImageIcon("images/telechargement2.png");
+        JLabel img_1_1 = new JLabel(corps_1_1, JLabel.CENTER);
+        corps_de_la_page.add(img_1_1);
+
+        // Case 1.2
+        JLabel corps_1_2 = new JLabel("<html>Notre équipe de conseillers experts vous aide dans votre recherche de votre futur Job,<br>Notre Objectif : vous voir le moins longtemps chez nous !</html>", JLabel.LEFT);
+        corps_1_2.setFont(new Font("SansSerif", Font.PLAIN, 16));
+        corps_1_2.setForeground(blanc);
+        corps_de_la_page.add(corps_1_2);
+
+        // Case 2.1
+        ImageIcon corps_2_1 = new ImageIcon("images/telechargement2.png");
+        JLabel img_2_1 = new JLabel(corps_2_1, JLabel.CENTER);
+        corps_de_la_page.add(img_2_1);
+
+        // Case 2.2
+        JLabel corps_2_2 = new JLabel("<html>Plongez dans l’actualité de l’emploi, découvrez nos conseils pour décrocher votre job idéal,<br>vous épanouir au travail, et accédez aux clés pour booster votre vie professionnelle.</html>", JLabel.LEFT);
+        corps_2_2.setFont(new Font("SansSerif", Font.PLAIN, 16));
+        corps_2_2.setForeground(blanc);
+        corps_de_la_page.add(corps_2_2);
 
         // Texte offres
         JLabel offresLabel = new JLabel("486 offres d'emploi : services aux entreprises");
@@ -129,25 +157,35 @@ public class MainPage extends JFrame {
         offresLabel.setFont(new Font("SansSerif", Font.PLAIN, 18));
         offresLabel.setBorder(new EmptyBorder(20, 20, 10, 0));
 
-        // Image de fond ou illustration centrale
-        ImageIcon bannerIcon = new ImageIcon("images/telechargement1.png");
-        Image scaledBanner = bannerIcon.getImage().getScaledInstance(1100, 300, Image.SCALE_SMOOTH);
-        bannerIcon = new ImageIcon(scaledBanner);
-        JLabel bannerLabel = new JLabel(bannerIcon);
-        bannerLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        // Texte bas de page
+        JTextArea texte_bas_page;
+        String text = "MatchaJob, Un job à ton goût… vertueux comme du matcha\n\n" +
+                "Contact: \n" +
+                "10 rue Sextius Michel, 75010 Paris, France\n" +
+                "Mail: contact@matchajob.com\n" +
+                "Téléphone: +33 (0) 6 15 08 75 05\n";
+        texte_bas_page = new JTextArea(text);
+        texte_bas_page.setEditable(false);
+        texte_bas_page.setBackground(fond_bas);
+        texte_bas_page.setLineWrap(true);
+        texte_bas_page.setWrapStyleWord(true);
+        texte_bas_page.setFocusable(false);
+        texte_bas_page.setBorder(new EmptyBorder(10, 20, 10, 20));
+        texte_bas_page.setFont(new Font("SansSerif", Font.PLAIN, 10));
 
         // Conteneur vertical
         JPanel contentPanel = new JPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
         contentPanel.setBackground(bleuFonce);
+        contentPanel.add(corps_de_la_page);
         contentPanel.add(Box.createVerticalStrut(20));
         contentPanel.add(offresLabel);
         contentPanel.add(Box.createVerticalStrut(20));
-        contentPanel.add(bannerLabel);
+        contentPanel.add(texte_bas_page);
 
         // Ajout au panel principal
         mainPanel.add(topNav, BorderLayout.NORTH);
-        mainPanel.add(searchPanel, BorderLayout.CENTER);
+        //mainPanel.add(searchPanel, BorderLayout.CENTER);
         mainPanel.add(contentPanel, BorderLayout.SOUTH);
 
 

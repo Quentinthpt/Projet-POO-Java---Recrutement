@@ -17,6 +17,7 @@ public class DemandeurEmploiView extends JFrame{
         setLocationRelativeTo(null);
 
         Color bleuFonce = new Color(9, 18, 66);
+        Color bleuClair = new Color(45, 132, 255);
         Color blanc = Color.WHITE;
 
         JPanel mainPanel = new JPanel(new BorderLayout());
@@ -27,9 +28,25 @@ public class DemandeurEmploiView extends JFrame{
         topNav.setBackground(blanc);
         topNav.setBorder(new EmptyBorder(10, 20, 10, 20));
 
+        // Logo image + texte
+        ImageIcon logoIcon = new ImageIcon("images/telechargement2.png");
+        Image scaledLogo = logoIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+        logoIcon = new ImageIcon(scaledLogo);
+
         JLabel logoLabel = new JLabel(" MatchaJob");
         logoLabel.setFont(new Font("SansSerif", Font.BOLD, 22));
         logoLabel.setForeground(bleuFonce);
+
+        JPanel menuPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 30, 5));
+        menuPanel.setBackground(blanc);
+
+        String[] menuItems = {"trouver un emploi", "candidats", "recruteurs", "nos agences", "à propos"};
+        for (String item : menuItems) {
+            JLabel label = new JLabel(item);
+            label.setFont(new Font("SansSerif", Font.PLAIN, 16));
+            label.setForeground(bleuFonce);
+            menuPanel.add(label);
+        }
 
         JPanel rightMenu = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         rightMenu.setBackground(blanc);
@@ -52,6 +69,9 @@ public class DemandeurEmploiView extends JFrame{
             }
         });
 
+        rightMenu.add(new JLabel("♡ 0"));
+        rightMenu.add(monCompte);
+
         // Actions
         profil.addActionListener(ev -> {
             dispose();
@@ -68,8 +88,8 @@ public class DemandeurEmploiView extends JFrame{
             new MainPage();
         });
 
-        rightMenu.add(monCompte);
         topNav.add(logoLabel, BorderLayout.WEST);
+        topNav.add(menuPanel, BorderLayout.CENTER);
         topNav.add(rightMenu, BorderLayout.EAST);
 
         JLabel welcome = new JLabel("Bienvenue " + demandeurEmploi.getPrenom() + " !");

@@ -42,8 +42,19 @@ public class ProfilPage extends JFrame {
         table.setEnabled(false);
 
         JScrollPane scrollPane = new JScrollPane(table);
+
+        JPanel footer = new JPanel();
+        JButton retour = new JButton("Retour");
+        retour.addActionListener(e -> {
+            dispose();
+            new DemandeurEmploiView(demandeurEmploi);
+        });
+        footer.add(retour);
+
+
         mainPanel.add(header, BorderLayout.NORTH);
         mainPanel.add(scrollPane, BorderLayout.CENTER);
+        mainPanel.add(footer, BorderLayout.SOUTH);
 
         add(mainPanel);
         setVisible(true);

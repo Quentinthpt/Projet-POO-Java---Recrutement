@@ -8,6 +8,7 @@ import Modele.Utilisateur;
 import javax.swing.*;
 import java.awt.*;
 import java.sql.SQLException;
+import java.util.Objects;
 
 public class LoginView extends JFrame {
     private JPanel mainPanel;
@@ -57,11 +58,13 @@ public class LoginView extends JFrame {
                 JOptionPane.showMessageDialog(this, "Bienvenue " + user.getPrenom() + "(" + user.getType() + ")");
                 dispose();
                 //new MainPage();
+
                 if (user instanceof DemandeurEmploi) {
-                    new DemandeurEmploi((DemandeurEmploi) user);
+                    new DemandeurEmploiView((DemandeurEmploi) user);
                 }
                 else{
                     new MainPage();
+                    //new DemandeurEmploi((DemandeurEmploi) user);
                 }
             } else {
                 JOptionPane.showMessageDialog(this, "Échec de la connexion.");

@@ -8,7 +8,7 @@ import java.awt.*;
 public class ProfilPage extends JFrame {
     public ProfilPage() {
         setTitle("Mon Profil - MatchaJob");
-        setSize(1000, 600);
+        setSize(1200, 800);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Changé pour ne pas quitter l'app
         setLocationRelativeTo(null);
 

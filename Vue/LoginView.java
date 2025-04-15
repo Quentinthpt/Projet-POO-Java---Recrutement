@@ -1,166 +1,288 @@
 package Vue;
 
-import DAO.UtilisateurDAO;
 import DAO.UtilisateurDAOImpl;
-import Modele.DemandeurEmploi;
 import Modele.SessionUtilisateur;
 import Modele.Utilisateur;
+import Vue.Components.FooterComponent;
+import Vue.Components.HeaderComponent;
 
 import javax.swing.*;
 import java.awt.*;
 import java.sql.SQLException;
-import java.util.Objects;
 
 public class LoginView extends JFrame {
-    private JPanel mainPanel;
-    private CardLayout cardLayout;
-    private UtilisateurDAO dao;
-    public SessionUtilisateur session;
-
+    private final CardLayout cardLayout = new CardLayout();
+    private final JPanel mainPanel = new JPanel(cardLayout);
+    private final UtilisateurDAOImpl utilisateurDAO = new UtilisateurDAOImpl();
 
     public LoginView(String mode) {
-        dao = new UtilisateurDAOImpl();
-        cardLayout = new CardLayout();
-        mainPanel = new JPanel(cardLayout);
+        configureFrame();
+        initUI(mode);
+    }
 
-        JPanel panelConnexion = createConnexionPanel();
-        JPanel panelInscription = createInscriptionPanel();
-
-        mainPanel.add(panelConnexion, "connexion");
-        mainPanel.add(panelInscription, "inscription");
-
-        add(mainPanel);
-        setTitle("Connexion / Inscription");
-        setSize(800, 600);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    private void configureFrame() {
+        setTitle("MatchaJob - Connexion");
+        setSize(1200, 800);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
+        setResizable(false);
+    }
+
+    private void initUI(String mode) {
+        JPanel container = new JPanel(new BorderLayout());
+
+        // Header
+        container.add(new HeaderComponent(this), BorderLayout.NORTH);
+
+        // Contenu principal avec padding
+        JPanel contentContainer = new JPanel(new BorderLayout());
+        contentContainer.setBorder(BorderFactory.createEmptyBorder(50, 100, 50, 100)); // Grands marges
+        contentContainer.setBackground(Color.WHITE);
+
+        mainPanel.add(createLoginPanel(), "connexion");
+        mainPanel.add(createRegisterPanel(), "inscription");
+        contentContainer.add(mainPanel, BorderLayout.CENTER);
+
+        container.add(contentContainer, BorderLayout.CENTER);
+
+        // Footer
+        container.add(new FooterComponent(), BorderLayout.SOUTH);
+
+        add(container);
         cardLayout.show(mainPanel, mode.toLowerCase());
-        setVisible(true);
     }
-    private JPanel createConnexionPanel() {
-        JPanel panel = new JPanel(new GridLayout(5, 1));
+
+    private JPanel createLoginPanel() {
+        JPanel panel = new JPanel(new GridBagLayout());
+        panel.setBackground(Color.WHITE);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(20, 20, 20, 20); // Espacement augmenté
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        // Style
+        Color bleuFonce = new Color(9, 18, 66);
+        Color bleuClair = new Color(45, 132, 255);
+
+        // Titre
+        JLabel titleLabel = new JLabel("CONNEXION", SwingConstants.CENTER);
+        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 32)); // Taille augmentée
+        titleLabel.setForeground(bleuFonce);
+        titleLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 30, 0));
+
+        // Champs de formulaire
         JTextField emailField = new JTextField();
+        emailField.setPreferredSize(new Dimension(300, 40)); // Taille augmentée
+        emailField.setFont(new Font("SansSerif", Font.PLAIN, 18));
+
         JPasswordField passwordField = new JPasswordField();
-        JButton loginButton = new JButton("Se connecter");
-        JButton switchToInscription = new JButton("Créer un compte");JButton retourAccueil = new JButton("Retour à l'accueil");
+        passwordField.setPreferredSize(new Dimension(300, 40));
+        passwordField.setFont(new Font("SansSerif", Font.PLAIN, 18));
 
-        loginButton.addActionListener(e -> {
-            String email = emailField.getText();
-            String password = new String(passwordField.getPassword());
-            try {
-                Utilisateur user = dao.connecter(email, password);
+        // Boutons
+        JButton loginButton = createStyledButton("SE CONNECTER", bleuClair, 300, 50);
+        JButton switchButton = createStyledButton("CRÉER UN COMPTE", new Color(180, 180, 180), 300, 50);
+        JButton homeButton = createStyledButton("RETOUR À L'ACCUEIL", bleuFonce, 300, 50);
 
-                if (user != null) {
-                    // Initialisation de la session
-                    session = SessionUtilisateur.getInstance();
-                    session.setId(user.getId()); // Vous devrez ajouter getId() à votre classe Utilisateur
-                    session.setNom(user.getNom());
-                    session.setPrenom(user.getPrenom());
-                    session.setEmail(user.getEmail());
-                    session.setRole(user.getType()); // "Admin" ou "Demandeur"
+        // Positionnement
+        gbc.gridwidth = 10;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        panel.add(titleLabel, gbc);
 
-                    // Si c'est un demandeur, on ajoute les infos supplémentaires
-                    if (user instanceof DemandeurEmploi) {
-                        DemandeurEmploi demandeur = (DemandeurEmploi)user;
-                        // Ajoutez ici les setters supplémentaires si nécessaire
-                    }
+        gbc.gridwidth = 10;
+        gbc.gridy = 1;
+        panel.add(createFormLabel("Email:"), gbc);
+        gbc.gridx = 1;
+        panel.add(emailField, gbc);
 
-                    JOptionPane.showMessageDialog(this, "Bienvenue " + user.getPrenom() + " (" + user.getType() + ")");
-                    dispose();
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        panel.add(createFormLabel("Mot de passe:"), gbc);
+        gbc.gridx = 1;
+        panel.add(passwordField, gbc);
 
-                    // Redirection en fonction du type d'utilisateur
-                    if (user.getType().equalsIgnoreCase("Admin")) {
-                        new MainPage(); // Ou AdminView si vous en avez une
-                    } else {
-                        new MainPage(); // Passez l'utilisateur si nécessaire
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(this, "Échec de la connexion.");
-                }
-            } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(this, "Erreur de connexion à la base de données");
-                ex.printStackTrace();
-            }
-        });
+        gbc.gridwidth = 4;
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        panel.add(loginButton, gbc);
 
-        switchToInscription.addActionListener(e -> cardLayout.show(mainPanel, "inscription"));
-        retourAccueil.addActionListener(e -> {
-            dispose(); // Ferme LoginView
-            new MainPage(); // Réouvre la page principale
-        });
+        gbc.gridy = 4;
+        panel.add(switchButton, gbc);
 
-        panel.add(new JLabel("Email:")); panel.add(emailField);
-        panel.add(new JLabel("Mot de passe:")); panel.add(passwordField);
-        panel.add(loginButton);
-        panel.add(switchToInscription);
-        panel.add(retourAccueil);
+        gbc.gridy = 5;
+        panel.add(homeButton, gbc);
+
+        // Listeners
+        loginButton.addActionListener(e -> handleLogin(
+                emailField.getText(),
+                new String(passwordField.getPassword())
+        ));
+
+        switchButton.addActionListener(e -> cardLayout.show(mainPanel, "inscription"));
+        homeButton.addActionListener(e -> returnToHome());
+
         return panel;
     }
 
-    private JPanel createInscriptionPanel() {
-        JPanel panel = new JPanel(new GridLayout(10, 2));
-        JTextField nomField = new JTextField();
-        JTextField prenomField = new JTextField();
-        JTextField ageField = new JTextField();
-        JTextField emailField = new JTextField();
-        JTextField adresseField = new JTextField();
-        JTextField experienceField = new JTextField();
-        JTextField cvField = new JTextField();
+    private JPanel createRegisterPanel() {
+        JPanel panel = new JPanel(new GridBagLayout());
+        panel.setBackground(Color.WHITE);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(15, 15, 15, 15);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        // Style
+        Color bleuFonce = new Color(9, 18, 66);
+        Color bleuClair = new Color(45, 132, 255);
+
+        // Titre
+        JLabel titleLabel = new JLabel("INSCRIPTION DEMANDEUR", SwingConstants.CENTER);
+        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 32));
+        titleLabel.setForeground(bleuFonce);
+        titleLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 30, 0));
+
+        // Champs de formulaire
+        JTextField[] fields = new JTextField[7];
+        for (int i = 0; i < fields.length; i++) {
+            fields[i] = new JTextField();
+            fields[i].setPreferredSize(new Dimension(300, 40));
+            fields[i].setFont(new Font("SansSerif", Font.PLAIN, 18));
+        }
+
         JPasswordField passwordField = new JPasswordField();
-        JButton registerButton = new JButton("S'inscrire");
-        JButton switchToConnexion = new JButton("Retour à la connexion");
+        passwordField.setPreferredSize(new Dimension(300, 40));
+        passwordField.setFont(new Font("SansSerif", Font.PLAIN, 18));
 
-        JButton retourAccueil = new JButton("Retour à l'accueil");
+        // Boutons
+        JButton registerButton = createStyledButton("S'INSCRIRE", bleuClair, 300, 50);
+        JButton switchButton = createStyledButton("DÉJÀ UN COMPTE ?", new Color(180, 180, 180), 300, 50);
+        JButton homeButton = createStyledButton("RETOUR À L'ACCUEIL", bleuFonce, 300, 50);
 
-        registerButton.addActionListener(e -> {
-            try {
-                Utilisateur user = new Utilisateur(
-                        nomField.getText(),
-                        prenomField.getText(),
-                        Integer.parseInt(ageField.getText()),
-                        emailField.getText(),
-                        adresseField.getText(),
-                        experienceField.getText(),
-                        cvField.getText(),
-                        new String(passwordField.getPassword()), "Demandeur"
-                );
-                boolean success = dao.inscrireDemandeur(user);
+        // Positionnement
+        gbc.gridwidth = 2;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        panel.add(titleLabel, gbc);
 
-                if (user != null) {
-                    JOptionPane.showMessageDialog(this, "Inscription réussie !");
-                    dispose();
-                    new MainPage();
-                } else {
-                    JOptionPane.showMessageDialog(this, "Erreur lors de l'inscription.");
-                }
+        String[] labels = {"Nom:", "Prénom:", "Âge:", "Email:", "Adresse:", "Expérience:", "CV:", "Mot de passe:"};
 
-                if (success) cardLayout.show(mainPanel, "connexion");
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "Âge invalide.");
+        for (int i = 0; i < labels.length; i++) {
+            gbc.gridwidth = 1;
+            gbc.gridx = 0;
+            gbc.gridy = i + 1;
+            panel.add(createFormLabel(labels[i]), gbc);
+
+            gbc.gridx = 1;
+            if (i == labels.length - 1) {
+                panel.add(passwordField, gbc);
+            } else {
+                panel.add(fields[i], gbc);
             }
-        });
+        }
 
-        switchToConnexion.addActionListener(e -> cardLayout.show(mainPanel, "connexion"));
+        gbc.gridwidth = 10;
+        gbc.gridx = 0;
+        gbc.gridy = labels.length + 1;
+        panel.add(registerButton, gbc);
 
-        retourAccueil.addActionListener(e -> {
-            dispose(); // Ferme LoginView
-            new MainPage(); // Réouvre la page principale
-        });
+        gbc.gridy = labels.length + 2;
+        panel.add(switchButton, gbc);
 
+        gbc.gridy = labels.length + 3;
+        panel.add(homeButton, gbc);
 
+        // Listeners
+        registerButton.addActionListener(e -> handleRegistration(fields, passwordField));
+        switchButton.addActionListener(e -> cardLayout.show(mainPanel, "connexion"));
+        homeButton.addActionListener(e -> returnToHome());
 
-        panel.add(new JLabel("Nom:")); panel.add(nomField);
-        panel.add(new JLabel("Prénom:")); panel.add(prenomField);
-        panel.add(new JLabel("Âge:")); panel.add(ageField);
-        panel.add(new JLabel("Email:")); panel.add(emailField);
-        panel.add(new JLabel("Adresse:")); panel.add(adresseField);
-        panel.add(new JLabel("Expérience:")); panel.add(experienceField);
-        panel.add(new JLabel("CV (nom de fichier):")); panel.add(cvField);
-        panel.add(new JLabel("Mot de passe:")); panel.add(passwordField);
-        panel.add(registerButton);
-        panel.add(switchToConnexion);
-        panel.add(retourAccueil);
         return panel;
     }
 
+    private JLabel createFormLabel(String text) {
+        JLabel label = new JLabel(text);
+        label.setFont(new Font("SansSerif", Font.BOLD, 18));
+        return label;
+    }
+
+    private JButton createStyledButton(String text, Color bgColor, int width, int height) {
+        JButton button = new JButton(text);
+        button.setBackground(bgColor);
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setFont(new Font("SansSerif", Font.BOLD, 16));
+        button.setPreferredSize(new Dimension(width, height));
+        button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        return button;
+    }
+
+    private void handleLogin(String email, String password) {
+        try {
+            Utilisateur user = utilisateurDAO.connecter(email, password);
+
+            if (user != null) {
+                initUserSession(user);
+                redirectAfterLogin(user);
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "Identifiants incorrects",
+                        "Erreur",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (SQLException ex) {
+            showDatabaseError();
+        }
+    }
+
+    private void initUserSession(Utilisateur user) {
+        SessionUtilisateur session = SessionUtilisateur.getInstance();
+        session.setId(user.getId());
+        session.setNom(user.getNom());
+        session.setPrenom(user.getPrenom());
+        session.setEmail(user.getEmail());
+        session.setRole(user.getType());
+    }
+
+    private void redirectAfterLogin(Utilisateur user) {
+        dispose();
+        new MainPage();
+    }
+
+    private void handleRegistration(JTextField[] fields, JPasswordField passwordField) {
+        try {
+            Utilisateur newUser = new Utilisateur(
+                    fields[0].getText(),
+                    fields[1].getText(),
+                    Integer.parseInt(fields[2].getText()),
+                    fields[3].getText(),
+                    fields[4].getText(),
+                    fields[5].getText(),
+                    fields[6].getText(),
+                    new String(passwordField.getPassword()),
+                    "Demandeur"
+            );
+
+            if (utilisateurDAO.inscrireDemandeur(newUser)) {
+                JOptionPane.showMessageDialog(this, "Inscription réussie !");
+                cardLayout.show(mainPanel, "connexion");
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this,
+                    "L'âge doit être un nombre valide",
+                    "Erreur",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void returnToHome() {
+        dispose();
+        new MainPage().setVisible(true);
+    }
+
+    private void showDatabaseError() {
+        JOptionPane.showMessageDialog(this,
+                "Erreur de connexion à la base de données",
+                "Erreur",
+                JOptionPane.ERROR_MESSAGE);
+    }
 }

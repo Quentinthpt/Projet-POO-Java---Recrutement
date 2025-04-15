@@ -88,11 +88,13 @@ public class HeaderComponent extends JPanel {
 
             menuConnexion.addActionListener(e -> {
                 parentFrame.dispose();
-                new LoginView("connexion");
+                LoginView login = new LoginView("connexion");
+                login.setVisible(true);  // <--- ici
             });
             menuInscription.addActionListener(e -> {
                 parentFrame.dispose();
-                new LoginView("inscription");
+                LoginView login = new LoginView("inscription");
+                login.setVisible(true);  // <--- ici
             });
 
             popupMenu.add(menuConnexion);

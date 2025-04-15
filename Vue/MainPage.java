@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -62,9 +63,31 @@ public class MainPage extends JFrame {
             JLabel label = new JLabel(item);
             label.setFont(new Font("SansSerif", Font.PLAIN, 16));
             label.setForeground(bleuFonce);
+
+            // Rend le label cliquable
+            label.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+            // Ajout de l'action pour "trouver un emploi"
+            if (item.equals("trouver un emploi")) {
+                label.addMouseListener(new java.awt.event.MouseAdapter() {
+                    public void mousePressed(java.awt.event.MouseEvent evt) {
+                        dispose(); // Ferme MainPage
+                        new OffreEmploiView(); // Ouvre la vue des offres
+                    }
+
+                    // Effet hover optionnel
+                    public void mouseEntered(java.awt.event.MouseEvent evt) {
+                        label.setForeground(bleuClair);
+                    }
+
+                    public void mouseExited(java.awt.event.MouseEvent evt) {
+                        label.setForeground(bleuFonce);
+                    }
+                });
+            }
+
             menuPanel.add(label);
         }
-
         JPanel rightMenu = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 5));
         rightMenu.setBackground(blanc);
         //rightMenu.add(new JLabel("♡ 0"));
@@ -129,26 +152,43 @@ public class MainPage extends JFrame {
         corps_de_la_page.setBackground(bleuFonce);
         corps_de_la_page.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        // Case 1.1
+        // Case 1.1 - Image d’accroche
         ImageIcon corps_1_1 = new ImageIcon("images/telechargement2.png");
         JLabel img_1_1 = new JLabel(corps_1_1, JLabel.CENTER);
+        img_1_1.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
         corps_de_la_page.add(img_1_1);
 
-        // Case 1.2
-        JLabel corps_1_2 = new JLabel("<html>Notre équipe de conseillers experts vous aide dans votre recherche de votre futur Job,<br>Notre Objectif : vous voir le moins longtemps chez nous !</html>", JLabel.LEFT);
-        corps_1_2.setFont(new Font("SansSerif", Font.PLAIN, 16));
+// Case 1.2 - Message accrocheur
+        JLabel corps_1_2 = new JLabel("<html><div style='width: 400px;'>"
+                + "<h2 style='color: #ffffff;'>Trouver un job n’a jamais été aussi simple !</h2>"
+                + "<p style='font-size: 14px;'>Chez nous, vous êtes bien plus qu’un simple CV. "
+                + "Notre équipe de conseillers passionnés vous accompagne à chaque étape, du choix de l’offre à l’entretien final. "
+                + "Fini les arnaques et les promesses floues : chaque annonce est vérifiée, chaque recruteur est authentifié.</p>"
+                + "<p style='margin-top: 10px;'>Notre objectif ? Que vous trouviez rapidement un emploi qui vous correspond, "
+                + "et que vous n’ayez plus besoin de nous 😉</p>"
+                + "</div></html>", JLabel.LEFT);
+        corps_1_2.setFont(new Font("SansSerif", Font.PLAIN, 15));
         corps_1_2.setForeground(blanc);
+        corps_1_2.setBorder(BorderFactory.createEmptyBorder(0, 10, 30, 10));
         corps_de_la_page.add(corps_1_2);
 
-        // Case 2.1
+// Case 2.1 - Deuxième image
         ImageIcon corps_2_1 = new ImageIcon("images/telechargement2.png");
         JLabel img_2_1 = new JLabel(corps_2_1, JLabel.CENTER);
+        img_2_1.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
         corps_de_la_page.add(img_2_1);
 
-        // Case 2.2
-        JLabel corps_2_2 = new JLabel("<html>Plongez dans l’actualité de l’emploi, découvrez nos conseils pour décrocher votre job idéal,<br>vous épanouir au travail, et accédez aux clés pour booster votre vie professionnelle.</html>", JLabel.LEFT);
-        corps_2_2.setFont(new Font("SansSerif", Font.PLAIN, 16));
+// Case 2.2 - Infos + conseils
+        JLabel corps_2_2 = new JLabel("<html><div style='width: 400px;'>"
+                + "<h2 style='color: #ffffff;'>Boostez votre avenir professionnel</h2>"
+                + "<p style='font-size: 14px;'>Accédez à des contenus exclusifs : conseils pour réussir vos entretiens, "
+                + "astuces pour valoriser votre profil, et décryptage des tendances du marché de l’emploi.</p>"
+                + "<p style='margin-top: 10px;'>Chaque jour, de nouvelles opportunités vous attendent. "
+                + "Notre plateforme intelligente vous recommande les meilleures offres, adaptées à vos compétences et à vos envies.</p>"
+                + "</div></html>", JLabel.LEFT);
+        corps_2_2.setFont(new Font("SansSerif", Font.PLAIN, 15));
         corps_2_2.setForeground(blanc);
+        corps_2_2.setBorder(BorderFactory.createEmptyBorder(0, 10, 30, 10));
         corps_de_la_page.add(corps_2_2);
 
         // Texte offres
@@ -189,7 +229,48 @@ public class MainPage extends JFrame {
         mainPanel.add(contentPanel, BorderLayout.SOUTH);
 
 
-        add(mainPanel);
+        // Créer le JScrollPane
+        JScrollPane scrollPane = new JScrollPane(mainPanel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder()); // Supprime la bordure grise par défaut
+
+// Style personnalisé pour la barre de défilement
+        JScrollBar verticalScrollBar = scrollPane.getVerticalScrollBar();
+        verticalScrollBar.setBackground(Color.WHITE); // Fond blanc
+        verticalScrollBar.setForeground(new Color(45, 132, 255)); // Couleur bleue pour le thumb
+        verticalScrollBar.setUnitIncrement(16); // Vitesse de défilement plus fluide
+        verticalScrollBar.setPreferredSize(new Dimension(10, 0)); // Largeur réduite
+
+// Style du thumb (partie mobile)
+        verticalScrollBar.setUI(new BasicScrollBarUI() {
+            @Override
+            protected void configureScrollBarColors() {
+                this.thumbColor = new Color(45, 132, 255); // Bleu clair
+                this.trackColor = Color.WHITE; // Fond blanc
+            }
+
+            @Override
+            protected JButton createDecreaseButton(int orientation) {
+                return createZeroButton(); // Supprime les flèches
+            }
+
+            @Override
+            protected JButton createIncreaseButton(int orientation) {
+                return createZeroButton(); // Supprime les flèches
+            }
+
+            private JButton createZeroButton() {
+                JButton button = new JButton();
+                button.setPreferredSize(new Dimension(0, 0));
+                button.setMinimumSize(new Dimension(0, 0));
+                button.setMaximumSize(new Dimension(0, 0));
+                return button;
+            }
+        });
+
+        add(scrollPane); // Ajoute le JScrollPane à la JFrame
+
         setVisible(true);
     }
 

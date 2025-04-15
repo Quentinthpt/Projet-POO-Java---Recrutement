@@ -16,7 +16,7 @@ public class ProfilPage extends JFrame {
         Color blanc = Color.WHITE;
 
         JPanel mainPanel = new JPanel(new BorderLayout());
-        mainPanel.setBackground(blanc);
+        mainPanel.setBackground(bleuFonce);
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         // Récupération des infos de la session
@@ -24,8 +24,10 @@ public class ProfilPage extends JFrame {
 
         // Header
         JLabel header = new JLabel("Mon Profil", SwingConstants.CENTER);
-        header.setForeground(bleuFonce);
+        header.setForeground(blanc);
         header.setFont(new Font("SansSerif", Font.BOLD, 24));
+        header.setOpaque(true);
+        header.setBackground(bleuFonce);
         header.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
 
         // Tableau des informations

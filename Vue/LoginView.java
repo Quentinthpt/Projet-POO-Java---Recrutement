@@ -56,8 +56,9 @@ public class LoginView extends JFrame {
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setBackground(Color.WHITE);
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(20, 20, 20, 20); // Espacement augmenté
+        gbc.insets = new Insets(10, 10, 10, 10); // Espacement augmenté
         gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1.0;
 
         // Style
         Color bleuFonce = new Color(9, 18, 66);
@@ -79,31 +80,41 @@ public class LoginView extends JFrame {
         passwordField.setFont(new Font("SansSerif", Font.PLAIN, 18));
 
         // Boutons
-        JButton loginButton = createStyledButton("SE CONNECTER", bleuClair, 300, 50);
-        JButton switchButton = createStyledButton("CRÉER UN COMPTE", new Color(180, 180, 180), 300, 50);
-        JButton homeButton = createStyledButton("RETOUR À L'ACCUEIL", bleuFonce, 300, 50);
+        JButton loginButton = createStyledButton("SE CONNECTER", bleuClair, 200, 40);
+        JButton switchButton = createStyledButton("CRÉER UN COMPTE", new Color(180, 180, 180), 200, 40);
+        JButton homeButton = createStyledButton("RETOUR À L'ACCUEIL", bleuFonce, 200, 40);
 
         // Positionnement
-        gbc.gridwidth = 10;
+        gbc.gridwidth = 2;
         gbc.gridx = 0;
         gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.CENTER;
         panel.add(titleLabel, gbc);
 
-        gbc.gridwidth = 10;
+        gbc.gridwidth = 1;
+        gbc.gridx = 0;
         gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.LINE_END;
         panel.add(createFormLabel("Email:"), gbc);
+
         gbc.gridx = 1;
+        //gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.LINE_START;
         panel.add(emailField, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 2;
+        gbc.anchor = GridBagConstraints.LINE_END;
         panel.add(createFormLabel("Mot de passe:"), gbc);
+
         gbc.gridx = 1;
+        //gbc.gridy = 2;
         panel.add(passwordField, gbc);
 
-        gbc.gridwidth = 4;
-        gbc.gridx = 0;
+        gbc.gridwidth = 1;
+        gbc.gridx = 1;
         gbc.gridy = 3;
+        gbc.anchor = GridBagConstraints.CENTER;
         panel.add(loginButton, gbc);
 
         gbc.gridy = 4;
@@ -154,9 +165,9 @@ public class LoginView extends JFrame {
         passwordField.setFont(new Font("SansSerif", Font.PLAIN, 18));
 
         // Boutons
-        JButton registerButton = createStyledButton("S'INSCRIRE", bleuClair, 300, 50);
-        JButton switchButton = createStyledButton("DÉJÀ UN COMPTE ?", new Color(180, 180, 180), 300, 50);
-        JButton homeButton = createStyledButton("RETOUR À L'ACCUEIL", bleuFonce, 300, 50);
+        JButton registerButton = createStyledButton("S'INSCRIRE", bleuClair, 200, 40);
+        JButton switchButton = createStyledButton("DÉJÀ UN COMPTE ?", new Color(180, 180, 180), 200, 40);
+        JButton homeButton = createStyledButton("RETOUR À L'ACCUEIL", bleuFonce, 200, 40);
 
         // Positionnement
         gbc.gridwidth = 2;
@@ -207,10 +218,10 @@ public class LoginView extends JFrame {
 
     private JButton createStyledButton(String text, Color bgColor, int width, int height) {
         JButton button = new JButton(text);
-        button.setBackground(bgColor);
-        button.setForeground(Color.WHITE);
-        button.setFocusPainted(false);
         button.setFont(new Font("SansSerif", Font.BOLD, 16));
+        button.setForeground(Color.WHITE);
+        button.setBackground(bgColor);
+        button.setFocusPainted(false);
         button.setPreferredSize(new Dimension(width, height));
         button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
         return button;

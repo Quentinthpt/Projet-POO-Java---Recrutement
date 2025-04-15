@@ -7,7 +7,7 @@ import java.awt.*;
 public class CandidatureView extends JFrame {
     public CandidatureView() {
         setTitle("Mes Candidatures - MatchaJob");
-        setSize(1000, 600);
+        setSize(1200, 800);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Changé pour ne pas quitter l'application
         setLocationRelativeTo(null);
 
@@ -16,14 +16,18 @@ public class CandidatureView extends JFrame {
         Color blanc = Color.WHITE;
 
         JPanel mainPanel = new JPanel(new BorderLayout());
-        mainPanel.setBackground(blanc);
+        mainPanel.setBackground(bleuFonce);
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         // Header
         JLabel header = new JLabel("Mes Candidatures", SwingConstants.CENTER);
-        header.setForeground(bleuFonce);
+        header.setForeground(blanc);
         header.setFont(new Font("SansSerif", Font.BOLD, 24));
-        header.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
+        header.setOpaque(true);
+        header.setBackground(bleuFonce);
+        header.setBorder(BorderFactory.createEmptyBorder(0,0,20,0));
+        //header.setPreferredSize(new Dimension(1000, 60));
+
 
         // Tableau des candidatures (à remplacer par des données réelles)
         String[][] data = {

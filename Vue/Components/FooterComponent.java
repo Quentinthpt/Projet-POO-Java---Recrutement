@@ -2,6 +2,9 @@ package Vue.Components;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.net.URI;
 
 public class FooterComponent extends JPanel {
     public FooterComponent() {
@@ -25,6 +28,32 @@ public class FooterComponent extends JPanel {
         texteBasPage.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
         texteBasPage.setFont(new Font("SansSerif", Font.PLAIN, 10));
 
-        add(texteBasPage, BorderLayout.CENTER);
+        ImageIcon mapIcon = new ImageIcon("images/ECE_plan.png");
+
+        Image image = mapIcon.getImage();
+        Image taille_image = image.getScaledInstance(450, 130, Image.SCALE_SMOOTH);
+
+        ImageIcon taille = new ImageIcon(taille_image);
+
+        JLabel mapLabel = new JLabel(taille);
+        mapLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        mapLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        mapLabel.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                try {
+                    Desktop.getDesktop().browse(new URI("https://www.google.com/maps/place/10+Rue+Sextius+Michel,+75015+Paris"));
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        JPanel contentPanel = new JPanel(new BorderLayout());
+        contentPanel.setBackground(fondBas);
+        contentPanel.add(texteBasPage, BorderLayout.CENTER);
+        contentPanel.add(mapLabel, BorderLayout.EAST);
+
+        add(contentPanel, BorderLayout.CENTER);
     }
 }

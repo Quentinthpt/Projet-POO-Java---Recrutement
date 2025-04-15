@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : mer. 02 avr. 2025 à 08:19
--- Version du serveur : 8.2.0
--- Version de PHP : 8.2.13
+-- Généré le : mar. 15 avr. 2025 à 15:07
+-- Version du serveur : 9.1.0
+-- Version de PHP : 8.3.14
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -30,12 +30,12 @@ SET time_zone = "+00:00";
 DROP TABLE IF EXISTS `administrateurs`;
 CREATE TABLE IF NOT EXISTS `administrateurs` (
   `id_admin` int NOT NULL AUTO_INCREMENT,
-  `nom_admin` varchar(255) NOT NULL,
-  `prenom_admin` varchar(255) NOT NULL,
-  `e_mail_admin` varchar(255) NOT NULL,
-  `pw_admin` varchar(255) NOT NULL,
+  `nom_admin` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `prenom_admin` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `e_mail_admin` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `pw_admin` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id_admin`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `administrateurs`
@@ -54,14 +54,14 @@ INSERT INTO `administrateurs` (`id_admin`, `nom_admin`, `prenom_admin`, `e_mail_
 DROP TABLE IF EXISTS `annonce`;
 CREATE TABLE IF NOT EXISTS `annonce` (
   `id_annonce` int NOT NULL AUTO_INCREMENT,
-  `titre_annonce` varchar(255) NOT NULL,
-  `description_annonce` varchar(255) NOT NULL,
-  `experience_requise_annonce` varchar(255) NOT NULL,
+  `titre_annonce` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description_annonce` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `experience_requise_annonce` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `salaire_annonce` int NOT NULL,
   `date_debut_annonce` date NOT NULL,
-  `statut_annonce` varchar(255) NOT NULL,
-  `lieu_travail_annonce` varchar(255) NOT NULL,
-  `type_contrat_annonce` varchar(255) NOT NULL,
+  `statut_annonce` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `lieu_travail_annonce` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `type_contrat_annonce` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `id_admin` int DEFAULT NULL,
   `id_societe` int DEFAULT NULL,
   `id_categorie` int DEFAULT NULL,
@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS `annonce` (
   KEY `Annonce_Administrateurs_FK` (`id_admin`),
   KEY `Annonce_Societe0_FK` (`id_societe`),
   KEY `Annonce_Categorie1_FK` (`id_categorie`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `annonce`
@@ -90,12 +90,12 @@ CREATE TABLE IF NOT EXISTS `candidature` (
   `id_annonce` int NOT NULL,
   `id_demandeurs` int NOT NULL,
   `date_candidature` date NOT NULL,
-  `statut_candidature` varchar(255) NOT NULL,
+  `statut_candidature` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `note_candidature` int NOT NULL,
-  `documents_candidature` varchar(255) NOT NULL,
+  `documents_candidature` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id_annonce`,`id_demandeurs`),
   KEY `Candidature_Demandeurs0_FK` (`id_demandeurs`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `candidature`
@@ -115,10 +115,10 @@ INSERT INTO `candidature` (`id_annonce`, `id_demandeurs`, `date_candidature`, `s
 DROP TABLE IF EXISTS `categorie`;
 CREATE TABLE IF NOT EXISTS `categorie` (
   `id_categorie` int NOT NULL AUTO_INCREMENT,
-  `nom_categorie` varchar(255) NOT NULL,
-  `dexcription_categorie` varchar(255) NOT NULL,
+  `nom_categorie` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `dexcription_categorie` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id_categorie`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `categorie`
@@ -137,16 +137,16 @@ INSERT INTO `categorie` (`id_categorie`, `nom_categorie`, `dexcription_categorie
 DROP TABLE IF EXISTS `demandeurs`;
 CREATE TABLE IF NOT EXISTS `demandeurs` (
   `id_demandeurs` int NOT NULL AUTO_INCREMENT,
-  `nom_demandeur` varchar(255) NOT NULL,
-  `prenom_demandeur` varchar(255) NOT NULL,
+  `nom_demandeur` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `prenom_demandeur` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `age_demandeur` int NOT NULL,
-  `e_mail_demandeur` varchar(255) NOT NULL,
-  `adresse_demandeur` varchar(255) NOT NULL,
-  `experience_demandeur` varchar(255) NOT NULL,
-  `cv_demandeur` varchar(255) NOT NULL,
-  `pw_demandeur` varchar(255) NOT NULL,
+  `e_mail_demandeur` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `adresse_demandeur` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `experience_demandeur` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `cv_demandeur` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `pw_demandeur` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id_demandeurs`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `demandeurs`
@@ -166,14 +166,14 @@ INSERT INTO `demandeurs` (`id_demandeurs`, `nom_demandeur`, `prenom_demandeur`, 
 DROP TABLE IF EXISTS `societe`;
 CREATE TABLE IF NOT EXISTS `societe` (
   `id_societe` int NOT NULL AUTO_INCREMENT,
-  `nom_societe` varchar(255) NOT NULL,
-  `secteur_activite_societe` varchar(255) NOT NULL,
-  `adresse_societe` varchar(255) NOT NULL,
+  `nom_societe` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `secteur_activite_societe` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `adresse_societe` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `numero_telephone_societe` int NOT NULL,
-  `email_societe` varchar(255) NOT NULL,
-  `description_societe` varchar(255) NOT NULL,
+  `email_societe` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description_societe` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id_societe`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `societe`

@@ -3,6 +3,7 @@ package Vue;
 import DAO.UtilisateurDAO;
 import DAO.UtilisateurDAOImpl;
 import Modele.DemandeurEmploi;
+import Modele.SessionUtilisateur;
 import Modele.Utilisateur;
 
 import javax.swing.*;
@@ -14,6 +15,8 @@ public class LoginView extends JFrame {
     private JPanel mainPanel;
     private CardLayout cardLayout;
     private UtilisateurDAO dao;
+    public SessionUtilisateur session;
+
 
     public LoginView(String mode) {
         dao = new UtilisateurDAOImpl();
@@ -34,40 +37,49 @@ public class LoginView extends JFrame {
         cardLayout.show(mainPanel, mode.toLowerCase());
         setVisible(true);
     }
-
     private JPanel createConnexionPanel() {
         JPanel panel = new JPanel(new GridLayout(5, 1));
         JTextField emailField = new JTextField();
         JPasswordField passwordField = new JPasswordField();
         JButton loginButton = new JButton("Se connecter");
-        JButton switchToInscription = new JButton("Créer un compte");
-
-        JButton retourAccueil = new JButton("Retour à l'accueil");
-
+        JButton switchToInscription = new JButton("Créer un compte");JButton retourAccueil = new JButton("Retour à l'accueil");
 
         loginButton.addActionListener(e -> {
             String email = emailField.getText();
             String password = new String(passwordField.getPassword());
-            Utilisateur user = null;
             try {
-                user = dao.connecter(email, password);
-            } catch (SQLException ex) {
-                throw new RuntimeException(ex);
-            }
-            if (user != null) {
-                JOptionPane.showMessageDialog(this, "Bienvenue " + user.getPrenom() + "(" + user.getType() + ")");
-                dispose();
-                //new MainPage();
+                Utilisateur user = dao.connecter(email, password);
 
-                if (user instanceof DemandeurEmploi) {
-                    new DemandeurEmploiView((DemandeurEmploi) user);
+                if (user != null) {
+                    // Initialisation de la session
+                    session = SessionUtilisateur.getInstance();
+                    session.setId(user.getId()); // Vous devrez ajouter getId() à votre classe Utilisateur
+                    session.setNom(user.getNom());
+                    session.setPrenom(user.getPrenom());
+                    session.setEmail(user.getEmail());
+                    session.setRole(user.getType()); // "Admin" ou "Demandeur"
+
+                    // Si c'est un demandeur, on ajoute les infos supplémentaires
+                    if (user instanceof DemandeurEmploi) {
+                        DemandeurEmploi demandeur = (DemandeurEmploi)user;
+                        // Ajoutez ici les setters supplémentaires si nécessaire
+                    }
+
+                    JOptionPane.showMessageDialog(this, "Bienvenue " + user.getPrenom() + " (" + user.getType() + ")");
+                    dispose();
+
+                    // Redirection en fonction du type d'utilisateur
+                    if (user.getType().equalsIgnoreCase("Admin")) {
+                        new MainPage(); // Ou AdminView si vous en avez une
+                    } else {
+                        new MainPage(); // Passez l'utilisateur si nécessaire
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "Échec de la connexion.");
                 }
-                else{
-                    new MainPage();
-                    //new DemandeurEmploi((DemandeurEmploi) user);
-                }
-            } else {
-                JOptionPane.showMessageDialog(this, "Échec de la connexion.");
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, "Erreur de connexion à la base de données");
+                ex.printStackTrace();
             }
         });
 

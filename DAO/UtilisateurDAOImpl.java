@@ -13,6 +13,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
         return DriverManager.getConnection(url, user, password);
     }
 
+
     public Utilisateur connecter(String email, String password) throws SQLException {
         Utilisateur admin = connecterAdmin(email, password);
         if (admin != null){

@@ -1,63 +1,94 @@
 package Vue;
 
-import Modele.DemandeurEmploi;
+import Modele.SessionUtilisateur;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class ProfilPage extends JFrame {
-    public ProfilPage(DemandeurEmploi demandeurEmploi) {
+    public ProfilPage() {
         setTitle("Mon Profil - MatchaJob");
         setSize(1000, 600);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Changé pour ne pas quitter l'app
         setLocationRelativeTo(null);
 
         Color bleuFonce = new Color(9, 18, 66);
         Color blanc = Color.WHITE;
 
         JPanel mainPanel = new JPanel(new BorderLayout());
-        mainPanel.setBackground(bleuFonce);
+        mainPanel.setBackground(blanc);
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        // Header simple
+        // Récupération des infos de la session
+        SessionUtilisateur session = SessionUtilisateur.getInstance();
+
+        // Header
         JLabel header = new JLabel("Mon Profil", SwingConstants.CENTER);
-        header.setForeground(blanc);
+        header.setForeground(bleuFonce);
         header.setFont(new Font("SansSerif", Font.BOLD, 24));
-        header.setBorder(BorderFactory.createEmptyBorder(30, 0, 20, 0));
+        header.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
 
-        // Tableau infos
+        // Tableau des informations
         String[][] data = {
-                {"Nom", demandeurEmploi.getNom()},
-                {"Prénom", demandeurEmploi.getPrenom()},
-                {"Email", demandeurEmploi.getEmail()},
-                {"Adresse", demandeurEmploi.getAdresse()},
-                {"Âge", String.valueOf(demandeurEmploi.getAge())},
-                {"Expérience", demandeurEmploi.getExperience()},
-                {"CV", demandeurEmploi.getCv()}
+                {"Nom", session.getNom()},
+                {"Prénom", session.getPrenom()},
+                {"Email", session.getEmail()},
+                {"Adresse", session.getAdresse()},
+                {"Âge", String.valueOf(session.getAge())},
+                {"Expérience", session.getExperience()},
+                {"CV", session.getCv()}
         };
-        String[] cols = {"Champ", "Valeur"};
+        String[] cols = {"Information", "Valeur"};
 
-        JTable table = new JTable(data, cols);
+        JTable table = new JTable(data, cols) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Tableau non éditable
+            }
+        };
+
+        // Style du tableau
         table.setFont(new Font("SansSerif", Font.PLAIN, 16));
-        table.setRowHeight(30);
-        table.setEnabled(false);
+        table.setRowHeight(35);
+        table.getTableHeader().setFont(new Font("SansSerif", Font.BOLD, 16));
+        table.setGridColor(new Color(200, 200, 200));
 
         JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
 
-        JPanel footer = new JPanel();
-        JButton retour = new JButton("Retour");
-        retour.addActionListener(e -> {
+        // Boutons
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+
+        JButton modifierBtn = new JButton("Modifier mon profil");
+        modifierBtn.setBackground(new Color(45, 132, 255));
+        modifierBtn.setForeground(blanc);
+        modifierBtn.addActionListener(e -> ouvrirModificationProfil());
+
+        JButton retourBtn = new JButton("Retour");
+        retourBtn.setBackground(bleuFonce);
+        retourBtn.setForeground(blanc);
+        retourBtn.addActionListener(e -> {
             dispose();
-            new DemandeurEmploiView(demandeurEmploi);
+            new MainPage(); // Plus besoin de passer le demandeur
         });
-        footer.add(retour);
 
+        buttonPanel.add(modifierBtn);
+        buttonPanel.add(retourBtn);
 
+        // Assemblage
         mainPanel.add(header, BorderLayout.NORTH);
         mainPanel.add(scrollPane, BorderLayout.CENTER);
-        mainPanel.add(footer, BorderLayout.SOUTH);
+        mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         add(mainPanel);
         setVisible(true);
     }
-}
 
+    private void ouvrirModificationProfil() {
+        // À implémenter : ouverture de la vue de modification
+        JOptionPane.showMessageDialog(this,
+                "Fonctionnalité de modification à implémenter",
+                "Information",
+                JOptionPane.INFORMATION_MESSAGE);
+    }
+}

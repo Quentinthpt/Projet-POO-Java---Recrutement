@@ -1,6 +1,8 @@
 package Vue;
 
 import Modele.DemandeurEmploi;
+import Modele.SessionUtilisateur;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -76,16 +78,16 @@ public class DemandeurEmploiView extends JFrame{
         // Actions
         profil.addActionListener(ev -> {
             dispose();
-            new ProfilPage(demandeurEmploi);
+            new ProfilPage();
         });
 
         candidatures.addActionListener(ev -> {
             dispose();
-            new CandidatureView(demandeurEmploi);
+            new CandidatureView();
         });
 
         deconnexion.addActionListener(ev -> {
-            dispose();
+            SessionUtilisateur.getInstance().clearSession();
             new MainPage();
         });
 

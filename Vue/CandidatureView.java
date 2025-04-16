@@ -34,9 +34,12 @@ public class CandidatureView extends JFrame {
 
         SessionUtilisateur session = SessionUtilisateur.getInstance();
         CandidatureDAOImpl candidatureDAO = new CandidatureDAOImpl();
-        List<Candidature> candidatures = candidatureDAO.getCandidaturesByIdDemandeur(session.getId());
 
-        String[][] data = new String[candidatures.size()][6];
+        List<String[]> lignes = candidatureDAO.getInfosAnnoncesCandidature(session.getId());
+        String[][] data = lignes.toArray(new String[0][]);
+        String[] colonne = {"Titre", "Description", "Salaire", "Lieu",
+                "Type de contrat", "Expérience requise", "Date début"};
+/*
         for (int i = 0; i < candidatures.size(); i++) {
             Candidature candidature = candidatures.get(i);
             data[i][0] = String.valueOf(candidature.getIdAnnonce());
@@ -47,15 +50,15 @@ public class CandidatureView extends JFrame {
             data[i][5] = candidature.getDocuments();
         }
 
-        String[] cols = {"ID Annonce" , "ID Demandeur", "Date Candidature", "Statut", "Note", "Documents"};
 
-        JTable table = new JTable(data, cols){
+        //String[] cols = {"ID Annonce" , "ID Demandeur", "Date Candidature", "Statut", "Note", "Documents"};
+*/
+        JTable table = new JTable(data, colonne){
             @Override
-            public boolean isCellEditable(int row, int col) {
+            public boolean isCellEditable(int row, int colonne) {
                 return false;
             }
         };
-
 
 /*
         // Tableau des candidatures (à remplacer par des données réelles)
@@ -127,22 +130,24 @@ public class CandidatureView extends JFrame {
             return;
         }
 
-        String idAnnonce = table.getValueAt(selectedRow, 0).toString();
-        String idDemandeur = table.getValueAt(selectedRow, 1).toString();
-        String date = table.getValueAt(selectedRow, 2).toString();
-        String statut = table.getValueAt(selectedRow, 3).toString();
-        String note = table.getValueAt(selectedRow, 4).toString();
-        String documents = table.getValueAt(selectedRow, 5).toString();
+        String Titre = table.getValueAt(selectedRow, 0).toString();
+        String Description = table.getValueAt(selectedRow, 1).toString();
+        String Salaire = table.getValueAt(selectedRow, 2).toString();
+        String Lieu = table.getValueAt(selectedRow, 3).toString();
+        String Type_de_Contrat = table.getValueAt(selectedRow, 4).toString();
+        String Experience = table.getValueAt(selectedRow, 5).toString();
+        String Date = table.getValueAt(selectedRow, 6).toString();
 
         String message = String.format(
                 "Détails de la candidature:\n\n" +
-                        "ID Annonce: %s\n" +
-                        "ID Demandeur: %s\n" +
-                        "Date: %s\n" +
-                        "Statut: %s\n" +
-                        "Note: %s\n" +
-                        "Documents: %s",
-                idAnnonce, idDemandeur, date, statut, note, documents);
+                        "Titre: %s\n" +
+                        "Description: %s\n" +
+                        "Salaire: %s\n" +
+                        "Lieu: %s\n" +
+                        "Type de Contrat: %s\n" +
+                        "Expérience requise: %s\n"+
+                        "Date: %s",
+                Titre, Description, Salaire, Lieu, Type_de_Contrat, Experience, Date);
 
         JOptionPane.showMessageDialog(this,
                 message,

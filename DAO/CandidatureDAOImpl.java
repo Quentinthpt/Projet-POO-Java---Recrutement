@@ -130,4 +130,36 @@ public class CandidatureDAOImpl {
         }
         return candidatures;
     }
+
+    public List<String[]> getInfosAnnoncesCandidature(int idDemandeur){
+        List<String[]> data = new ArrayList<>();
+        String sql = """
+        SELECT a.titre_annonce, a.description_annonce, a.salaire_annonce, a.lieu_travail_annonce,
+               a.type_contrat_annonce, a.experience_requise_annonce, a.date_debut_annonce
+        FROM candidature c
+        JOIN annonce a ON c.id_annonce = a.id_annonce
+        WHERE c.id_demandeurs = ?
+    """;
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idDemandeur);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                String[] row = new String[7];
+                row[0] = rs.getString("titre_annonce");
+                row[1] = rs.getString("description_annonce");
+                row[2] = rs.getString("salaire_annonce");
+                row[3] = rs.getString("lieu_travail_annonce");
+                row[4] = rs.getString("type_contrat_annonce");
+                row[5] = rs.getString("experience_requise_annonce");
+                row[6] = rs.getString("date_debut_annonce");
+                data.add(row);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return data;
+    }
 }

@@ -9,4 +9,5 @@ public interface CandidatureDAO {
 
     public Candidature getCandidateByEmail(String email) ;
     public void ajouterCandidature(int idAnnonce, int idDemandeur, String documents);
+    public Candidature getInfosAnnoncesCandidature(int idDemandeur);
 }

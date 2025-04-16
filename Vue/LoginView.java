@@ -135,7 +135,7 @@ public class LoginView extends JFrame {
         return panel;
     }
 
-    private JPanel createRegisterPanel() {
+    private JScrollPane createRegisterPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setBackground(Color.WHITE);
         GridBagConstraints gbc = new GridBagConstraints();
@@ -191,7 +191,7 @@ public class LoginView extends JFrame {
             }
         }
 
-        gbc.gridwidth = 10;
+        gbc.gridwidth = 2;
         gbc.gridx = 0;
         gbc.gridy = labels.length + 1;
         panel.add(registerButton, gbc);
@@ -207,7 +207,20 @@ public class LoginView extends JFrame {
         switchButton.addActionListener(e -> cardLayout.show(mainPanel, "connexion"));
         homeButton.addActionListener(e -> returnToHome());
 
-        return panel;
+
+        JScrollPane scrollPane = new JScrollPane(panel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+
+        JScrollBar verticalScrollBar = scrollPane.getVerticalScrollBar();
+        verticalScrollBar.setBackground(Color.WHITE);
+        verticalScrollBar.setForeground(bleuClair);
+        verticalScrollBar.setUnitIncrement(16);
+        verticalScrollBar.setPreferredSize(new Dimension(10, 0));
+
+        return scrollPane;
+        //return panel;
     }
 
     private JLabel createFormLabel(String text) {
@@ -251,6 +264,10 @@ public class LoginView extends JFrame {
         session.setNom(user.getNom());
         session.setPrenom(user.getPrenom());
         session.setEmail(user.getEmail());
+        session.setAdresse(user.getAdresse());
+        session.setAge(user.getAge());
+        session.setExperience(user.getExperience());
+        session.setCv(user.getCv());
         session.setRole(user.getType());
     }
 

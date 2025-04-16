@@ -4,6 +4,7 @@ import DAO.CandidatureDAOImpl;
 import DAO.OffreEmploiDAOImpl;
 import Modele.Candidature;
 import Modele.Annonce;
+import Modele.SessionUtilisateur;
 import Vue.Components.FooterComponent;
 import Vue.Components.HeaderComponent;
 
@@ -186,28 +187,21 @@ public class GestionCandidaturesView extends JFrame {
         String nouveauStatut = (String) tableModel.getValueAt(selectedRow, 4);
         int nouvelleNote = (int) tableModel.getValueAt(selectedRow, 5);
 
-        try {
-            CandidatureDAOImpl dao = new CandidatureDAOImpl();
-            Candidature candidature = new Candidature();
-            candidature.setIdAnnonce(idAnnonce);
-            candidature.setIdDemandeur(idDemandeur);
-            candidature.setStatut(nouveauStatut);
-            candidature.setNote(nouvelleNote);
-            
-            if (dao.updateCandidature(candidature)) {
-                JOptionPane.showMessageDialog(this,
-                        "Candidature mise à jour avec succès",
-                        "Succès",
-                        JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(this,
-                        "Erreur lors de la mise à jour de la candidature",
-                        "Erreur",
-                        JOptionPane.ERROR_MESSAGE);
-            }
-        } catch (SQLException e) {
+        CandidatureDAOImpl dao = new CandidatureDAOImpl();
+        Candidature candidature = new Candidature();
+        candidature.setIdAnnonce(idAnnonce);
+        candidature.setIdDemandeur(idDemandeur);
+        candidature.setStatut(nouveauStatut);
+        candidature.setNote(nouvelleNote);
+
+        if (dao.updateCandidature(candidature)) {
             JOptionPane.showMessageDialog(this,
-                    "Erreur lors de la mise à jour: " + e.getMessage(),
+                    "Candidature mise à jour avec succès",
+                    "Succès",
+                    JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    "Erreur lors de la mise à jour de la candidature",
                     "Erreur",
                     JOptionPane.ERROR_MESSAGE);
         }
@@ -232,23 +226,16 @@ public class GestionCandidaturesView extends JFrame {
                 JOptionPane.YES_NO_OPTION);
 
         if (option == JOptionPane.YES_OPTION) {
-            try {
-                CandidatureDAOImpl dao = new CandidatureDAOImpl();
-                if (dao.deleteCandidature(idAnnonce)) {
-                    loadCandidatures();
-                    JOptionPane.showMessageDialog(this,
-                            "Candidature supprimée avec succès",
-                            "Succès",
-                            JOptionPane.INFORMATION_MESSAGE);
-                } else {
-                    JOptionPane.showMessageDialog(this,
-                            "Erreur lors de la suppression de la candidature",
-                            "Erreur",
-                            JOptionPane.ERROR_MESSAGE);
-                }
-            } catch (SQLException e) {
+            CandidatureDAOImpl dao = new CandidatureDAOImpl();
+            if (dao.deleteCandidature(idAnnonce, SessionUtilisateur.getInstance().getId())) {
+                loadCandidatures();
                 JOptionPane.showMessageDialog(this,
-                        "Erreur lors de la suppression: " + e.getMessage(),
+                        "Candidature supprimée avec succès",
+                        "Succès",
+                        JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "Erreur lors de la suppression de la candidature",
                         "Erreur",
                         JOptionPane.ERROR_MESSAGE);
             }

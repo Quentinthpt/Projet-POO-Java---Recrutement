@@ -162,4 +162,26 @@ public class CandidatureDAOImpl {
 
         return data;
     }
+
+    public List<Candidature> getAllCandidatures() throws SQLException {
+        List<Candidature> candidatures = new ArrayList<>();
+        String sql = "SELECT * FROM candidature";
+
+        try (Connection conn = getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                Candidature candidature = new Candidature();
+                candidature.setIdAnnonce(rs.getInt("id_annonce"));
+                candidature.setIdDemandeur(rs.getInt("id_demandeurs"));
+                candidature.setDateCandidature(rs.getDate("date_candidature"));
+                candidature.setStatut(rs.getString("statut_candidature"));
+                candidature.setNote(rs.getInt("note_candidature"));
+                candidature.setDocuments(rs.getString("documents_candidature"));
+                candidatures.add(candidature);
+            }
+        }
+        return candidatures;
+    }
 }

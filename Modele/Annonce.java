@@ -34,6 +34,21 @@ public class Annonce {
         this.idCategorie = idCategorie;
     }
 
+    public Annonce() {
+        this.id = 0;
+        this.titre = "";
+        this.description = "";
+        this.experienceRequise = "";
+        this.salaire = 0;
+        this.dateDebut = null;
+        this.statut = "";
+        this.lieuTravail = "";
+        this.typeContrat = "";
+        this.idAdmin = 0;
+        this.idSociete = 0;
+        this.idCategorie = 0;
+    }
+
     // Getters et Setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
@@ -59,4 +74,8 @@ public class Annonce {
     public void setIdSociete(int idSociete) { this.idSociete = idSociete; }
     public int getIdCategorie() { return idCategorie; }
     public void setIdCategorie(int idCategorie) { this.idCategorie = idCategorie; }
+
+    public void setIdAnnonce(int idAnnonce) {
+        this.id = idAnnonce;
+    }
 }

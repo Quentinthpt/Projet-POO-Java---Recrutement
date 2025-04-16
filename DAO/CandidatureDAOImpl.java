@@ -15,6 +15,8 @@ public class CandidatureDAOImpl {
         return DriverManager.getConnection(url, user, password);
     }
 
+
+
     public void ajouterCandidature(Candidature candidature) {
         // Affichage des informations de la candidature à ajouter
         System.out.println(">>> Début de la méthode ajouterCandidature()");

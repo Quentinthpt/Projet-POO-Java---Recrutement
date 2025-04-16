@@ -58,7 +58,7 @@ public class CandidatureDAOImpl {
     }
 
 
-    public boolean updateCandidature(Candidature candidature) {
+    public boolean updateCandidature(Candidature candidature) throws SQLException {
         String sql = "UPDATE candidature SET date_candidature = ?, statut_candidature = ?, note_candidature = ?, documents_candidature = ? " +
                 "WHERE id_annonce = ? AND id_demandeurs = ?";
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -75,7 +75,7 @@ public class CandidatureDAOImpl {
         }
     }
 
-    public boolean deleteCandidature(int idAnnonce, int idDemandeurs) {
+    public boolean deleteCandidature(int idAnnonce, int idDemandeurs) throws SQLException {
         String sql = "DELETE FROM candidature WHERE id_annonce = ? AND id_demandeurs = ?";
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, idAnnonce);
@@ -184,4 +184,20 @@ public class CandidatureDAOImpl {
         }
         return candidatures;
     }
+
+    public boolean existeCandidature(int idDemandeur, int idAnnonce) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM candidature WHERE id_annonce = ? AND id_demandeurs = ?";
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idAnnonce);
+            stmt.setInt(2, idDemandeur);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }

@@ -214,6 +214,22 @@ public class OffreEmploiView extends JFrame {
                     return;
                 }
 
+                int idDemandeur = SessionUtilisateur.getInstance().getId();
+                int idAnnonce = annonce.getId();
+
+                // Ajout de la candidature
+                CandidatureDAOImpl candidatureDAO = new CandidatureDAOImpl();
+
+                boolean existeDeja = candidatureDAO.existeCandidature(idDemandeur, idAnnonce);
+
+                if (existeDeja){
+                    JOptionPane.showMessageDialog(this,
+                            "Vous avez déjà postulé à cette offre!",
+                            "Candidature existante",
+                            JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
                 // Création de la candidature
                 Candidature candidature = new Candidature();
                 candidature.setIdAnnonce(annonce.getId());
@@ -223,16 +239,14 @@ public class OffreEmploiView extends JFrame {
                 candidature.setNote(0);
                 candidature.setDocuments("lettre_motivation_" + SessionUtilisateur.getInstance().getId() + ".pdf");
 
-                // Ajout de la candidature
-                CandidatureDAOImpl candidatureDAO = new CandidatureDAOImpl();
                 candidatureDAO.ajouterCandidature(candidature);
 
-                /*JOptionPane.showMessageDialog(this,
+                JOptionPane.showMessageDialog(this,
                         "Votre candidature a été envoyée avec succès!",
                         "Succès",
                         JOptionPane.INFORMATION_MESSAGE);
 
-                 */
+
             } catch (SQLException e) {
                 JOptionPane.showMessageDialog(this,
                         "Erreur lors de la postulation: " + e.getMessage(),

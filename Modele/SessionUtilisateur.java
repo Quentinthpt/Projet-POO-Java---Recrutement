@@ -27,6 +27,15 @@ public class SessionUtilisateur {
         return instance;
     }
 
+    private void initUserSession(Utilisateur user){
+        SessionUtilisateur session = SessionUtilisateur.getInstance();
+        session.setId(user.getId());
+        session.setNom(user.getNom());
+        session.setPrenom(user.getPrenom());
+        session.setEmail(user.getEmail());
+        session.getRole(user.getType());
+    }
+
     // ================= GETTERS & SETTERS =================
 
     public int getId() {
@@ -53,9 +62,7 @@ public class SessionUtilisateur {
     public void setEmail(String email) {
         this.email = email;
     }
-    public String getRole() {
-        return role;
-    }
+    public String getRole(String type) {return role;}
     public void setRole(String role) {
         this.role = role;
     }

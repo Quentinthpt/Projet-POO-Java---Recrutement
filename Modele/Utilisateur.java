@@ -1,5 +1,6 @@
 package Modele;
 import java.util.*;
+import Modele.SessionUtilisateur;
 
 
 public class Utilisateur {

@@ -261,6 +261,7 @@ public class LoginView extends JFrame {
     private void initUserSession(Utilisateur user) {
         SessionUtilisateur session = SessionUtilisateur.getInstance();
         session.setId(user.getId());
+        System.out.println(user.getId());
         session.setNom(user.getNom());
         session.setPrenom(user.getPrenom());
         session.setEmail(user.getEmail());

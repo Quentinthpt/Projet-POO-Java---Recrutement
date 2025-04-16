@@ -88,9 +88,7 @@ public class ProfilPage extends JFrame {
 
     private void ouvrirModificationProfil() {
         // À implémenter : ouverture de la vue de modification
-        JOptionPane.showMessageDialog(this,
-                "Fonctionnalité de modification à implémenter",
-                "Information",
-                JOptionPane.INFORMATION_MESSAGE);
+        //JOptionPane.showMessageDialog(this,"Fonctionnalité de modification à implémenter","Information", JOptionPane.INFORMATION_MESSAGE);
+        new ProfilModifierView();
     }
 }

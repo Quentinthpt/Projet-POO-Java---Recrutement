@@ -1,5 +1,6 @@
 package Vue.Components;
 
+import DAO.EmployeurDAOImpl;
 import Modele.SessionUtilisateur;
 import Vue.*;
 
@@ -74,6 +75,45 @@ public class HeaderComponent extends JPanel {
                     public void mousePressed(java.awt.event.MouseEvent evt) {
                         parentFrame.dispose();
                         new CandidatureView();
+                    }
+                    public void mouseEntered(java.awt.event.MouseEvent evt) {
+                        label.setForeground(bleuClair);
+                    }
+                    public void mouseExited(java.awt.event.MouseEvent evt) {
+                        label.setForeground(bleuFonce);
+                    }
+                });
+            }
+
+            if (item.equals("recruteurs")) {
+                JPopupMenu recruteursMenu = new JPopupMenu();
+                JMenuItem menuRecruteurs = new JMenuItem("Recruteurs");
+                JMenuItem menuEntreprises = new JMenuItem("Entreprises");
+
+                menuRecruteurs.addActionListener(e -> {
+                    parentFrame.dispose();
+                    new RecruteurPage(new EmployeurDAOImpl(
+                        "jdbc:mysql://localhost:3306/recrutement",
+                        "root",
+                        ""
+                    )).show();
+                });
+
+                menuEntreprises.addActionListener(e -> {
+                    parentFrame.dispose();
+                    new EntreprisePage(new EmployeurDAOImpl(
+                        "jdbc:mysql://localhost:3306/recrutement",
+                        "root",
+                        ""
+                    )).show();
+                });
+
+                recruteursMenu.add(menuRecruteurs);
+                recruteursMenu.add(menuEntreprises);
+
+                label.addMouseListener(new java.awt.event.MouseAdapter() {
+                    public void mousePressed(java.awt.event.MouseEvent evt) {
+                        recruteursMenu.show(label, 0, label.getHeight());
                     }
                     public void mouseEntered(java.awt.event.MouseEvent evt) {
                         label.setForeground(bleuClair);

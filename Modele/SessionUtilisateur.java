@@ -32,71 +32,52 @@ public class SessionUtilisateur {
     public int getId() {
         return id;
     }
-
     public void setId(int id) {
         this.id = id;
     }
-
     public String getNom() {
         return nom;
     }
-
     public void setNom(String nom) {
         this.nom = nom;
     }
-
     public String getPrenom() {
         return prenom;
     }
-
     public void setPrenom(String prenom) {
         this.prenom = prenom;
     }
-
     public String getEmail() {
         return email;
     }
-
     public void setEmail(String email) {
         this.email = email;
     }
-
     public String getRole() {
         return role;
     }
-
     public void setRole(String role) {
         this.role = role;
     }
-
     public int getAge() {
         return age;
     }
-
     public void setAge(int age) {
         this.age = age;
     }
-
-    public String getAdresse() {
-        return adresse;
-    }
-
+    public String getAdresse() {return adresse;}
     public void setAdresse(String adresse) {
         this.adresse = adresse;
     }
-
     public String getExperience() {
         return experience;
     }
-
     public void setExperience(String experience) {
         this.experience = experience;
     }
-
     public String getCv() {
         return cv;
     }
-
     public void setCv(String cv) {
         this.cv = cv;
     }
@@ -106,23 +87,18 @@ public class SessionUtilisateur {
     public boolean isAdmin() {
         return "Admin".equalsIgnoreCase(role);
     }
-
     public boolean isDemandeur() {
         return "Demandeur".equalsIgnoreCase(role);
     }
-
     public boolean isRecruteur() {
         return "Recruteur".equalsIgnoreCase(role);
     }
-
     public void clearSession() {
         instance = null;
     }
-
     // Méthode pour initialiser complètement la session
     public void initSession(Utilisateur user) {
         if (user == null) return;
-
         this.id = user.getId();
         this.nom = user.getNom();
         this.prenom = user.getPrenom();

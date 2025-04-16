@@ -48,7 +48,7 @@ public class HeaderComponent extends JPanel {
         JPanel menuPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 30, 5));
         menuPanel.setBackground(Color.WHITE);
 
-        String[] menuItems = {"trouver un emploi", "candidats", "recruteurs", "nos agences", "à propos"};
+        String[] menuItems = {"trouver un emploi", "candidats", "recruteurs"};
         for (String item : menuItems) {
             JLabel label = new JLabel(item);
             label.setFont(new Font("SansSerif", Font.PLAIN, 16));
@@ -60,6 +60,20 @@ public class HeaderComponent extends JPanel {
                     public void mousePressed(java.awt.event.MouseEvent evt) {
                         parentFrame.dispose();
                         new OffreEmploiView();
+                    }
+                    public void mouseEntered(java.awt.event.MouseEvent evt) {
+                        label.setForeground(bleuClair);
+                    }
+                    public void mouseExited(java.awt.event.MouseEvent evt) {
+                        label.setForeground(bleuFonce);
+                    }
+                });
+            }
+            if (item.equals("candidats")) {
+                label.addMouseListener(new java.awt.event.MouseAdapter() {
+                    public void mousePressed(java.awt.event.MouseEvent evt) {
+                        parentFrame.dispose();
+                        new CandidatureView();
                     }
                     public void mouseEntered(java.awt.event.MouseEvent evt) {
                         label.setForeground(bleuClair);

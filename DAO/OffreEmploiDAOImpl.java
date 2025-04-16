@@ -186,4 +186,35 @@ public class OffreEmploiDAOImpl {
         }
         return annonces;
     }
+
+    // Nouvelle méthode : récupérer une annonce par son titre
+    public Annonce getAnnonceByTitre(String titre) throws SQLException {
+        try (Connection con = getConnection()) {
+            String sql = "SELECT * FROM annonce WHERE titre_annonce = ?";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, titre);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return new Annonce(
+                        rs.getInt("id_annonce"),
+                        rs.getString("titre_annonce"),
+                        rs.getString("description_annonce"),
+                        rs.getString("experience_requise_annonce"),
+                        rs.getInt("salaire_annonce"),
+                        rs.getDate("date_debut_annonce"),
+                        rs.getString("statut_annonce"),
+                        rs.getString("lieu_travail_annonce"),
+                        rs.getString("type_contrat_annonce"),
+                        rs.getInt("id_admin"),
+                        rs.getInt("id_societe"),
+                        rs.getInt("id_categorie")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        }
+        return null;
+    }
 }

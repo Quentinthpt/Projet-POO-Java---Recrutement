@@ -8,4 +8,5 @@ public interface CandidatureDAO {
     int countByAgence(int idAgence);
 
     public Candidature getCandidateByEmail(String email) ;
+    public void ajouterCandidature(int idAnnonce, int idDemandeur, String documents);
 }

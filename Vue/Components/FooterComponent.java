@@ -12,48 +12,95 @@ public class FooterComponent extends JPanel {
 
         setLayout(new BorderLayout());
         setBackground(fondBas);
+        setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 
-        String text = "MatchaJob, Un job à ton goût… vertueux comme du matcha\n\n" +
-                "Contact: \n" +
-                "10 rue Sextius Michel, 75010 Paris, France\n" +
-                "Mail: contact@matchajob.com\n" +
-                "Téléphone: +33 (0) 6 15 08 75 05\n";
+        // Panel principal avec BoxLayout pour disposition verticale
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
+        mainPanel.setBackground(fondBas);
 
-        JTextArea texteBasPage = new JTextArea(text);
-        texteBasPage.setEditable(false);
-        texteBasPage.setBackground(fondBas);
-        texteBasPage.setLineWrap(true);
-        texteBasPage.setWrapStyleWord(true);
-        texteBasPage.setFocusable(false);
-        texteBasPage.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
-        texteBasPage.setFont(new Font("SansSerif", Font.PLAIN, 10));
+        // Texte de contact
+        JPanel textPanel = createContactTextPanel(fondBas);
 
-        ImageIcon mapIcon = new ImageIcon("images/ECE_plan.png");
+        // Carte interactive
+        JPanel mapPanel = createInteractiveMapPanel();
 
-        Image image = mapIcon.getImage();
-        Image taille_image = image.getScaledInstance(450, 130, Image.SCALE_SMOOTH);
+        // Ajout des composants avec "glue" pour l'espacement
+        mainPanel.add(textPanel);
+        mainPanel.add(Box.createHorizontalGlue());
+        mainPanel.add(mapPanel);
 
-        ImageIcon taille = new ImageIcon(taille_image);
+        add(mainPanel, BorderLayout.CENTER);
+    }
 
-        JLabel mapLabel = new JLabel(taille);
-        mapLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        mapLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    private JPanel createContactTextPanel(Color bgColor) {
+        String text = "<html><div style='width: 300px;'>"
+                + "<b style='font-size:14px'>MatchaJob</b><br>"
+                + "Un job à ton goût... vertueux comme du matcha<br><br>"
+                + "<b>Contact:</b><br>"
+                + "10 rue Sextius Michel, 75015 Paris<br>"
+                + "Mail: contact@matchajob.com<br>"
+                + "Tél: +33 (0) 6 15 08 75 05"
+                + "</div></html>";
+
+        JLabel contactLabel = new JLabel(text);
+        contactLabel.setFont(new Font("SansSerif", Font.PLAIN, 12));
+        contactLabel.setBackground(bgColor);
+
+        JPanel textPanel = new JPanel(new BorderLayout());
+        textPanel.setBackground(bgColor);
+        textPanel.add(contactLabel, BorderLayout.NORTH);
+        textPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 50));
+
+        return textPanel;
+    }
+
+    private JPanel createInteractiveMapPanel() {
+        ImageIcon originalIcon = new ImageIcon("images/ECE_plan.png");
+        Image scaledImage = originalIcon.getImage().getScaledInstance(350, 150, Image.SCALE_SMOOTH);
+        ImageIcon mapIcon = new ImageIcon(scaledImage);
+
+        JLabel mapLabel = new JLabel(mapIcon);
+        mapLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        mapLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+        // Tooltip pour indiquer que c'est cliquable
+        mapLabel.setToolTipText("Cliquez pour voir sur Google Maps");
 
         mapLabel.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseClicked(MouseEvent e) {
-                try {
-                    Desktop.getDesktop().browse(new URI("https://www.google.com/maps/place/10+Rue+Sextius+Michel,+75015+Paris"));
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
+                openGoogleMaps();
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                mapLabel.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                mapLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
             }
         });
 
-        JPanel contentPanel = new JPanel(new BorderLayout());
-        contentPanel.setBackground(fondBas);
-        contentPanel.add(texteBasPage, BorderLayout.CENTER);
-        contentPanel.add(mapLabel, BorderLayout.EAST);
+        // Panel pour la carte avec contraintes de taille
+        JPanel mapPanel = new JPanel(new BorderLayout());
+        mapPanel.setBackground(new Color(155, 182, 243));
+        mapPanel.setMaximumSize(new Dimension(400, 180));
+        mapPanel.add(mapLabel, BorderLayout.CENTER);
 
-        add(contentPanel, BorderLayout.CENTER);
+        return mapPanel;
+    }
+
+    private void openGoogleMaps() {
+        try {
+            Desktop.getDesktop().browse(new URI("https://www.google.com/maps/place/10+Rue+Sextius+Michel,+75015+Paris"));
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this,
+                    "Impossible d'ouvrir Google Maps",
+                    "Erreur",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
 }

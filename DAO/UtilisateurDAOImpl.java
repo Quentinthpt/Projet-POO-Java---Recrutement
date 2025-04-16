@@ -33,6 +33,8 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
             if (rs.next()){
                 Utilisateur admin =  new Utilisateur(rs.getString("nom_admin"), rs.getString("prenom_admin"), email, password, "Admin");
                 admin.setId(rs.getInt("id_admin"));
+                System.out.println(admin);
+                SessionUtilisateur.getInstance().setId(rs.getInt("id_admin"));
                 return admin;
             }
         } catch(SQLException e){

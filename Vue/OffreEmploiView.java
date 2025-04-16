@@ -93,15 +93,32 @@ public class OffreEmploiView extends JFrame {
     private JPanel createButtonPanel(Color bleuFonce, Color bleuClair) {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
 
-        JButton postulerButton = createStyledButton("Postuler", bleuClair, e -> postulerAction());
-        JButton refreshButton = createStyledButton("Actualiser", bleuFonce, e -> loadAnnonces());
+        // Vérifier si l'utilisateur est un administrateur
+        boolean isAdmin = SessionUtilisateur.getInstance().isAdmin();
 
-        buttonPanel.add(postulerButton);
+        if (isAdmin) {
+            JButton gererCandidaturesButton = createStyledButton("Gérer les candidatures", bleuClair, e -> gererCandidaturesAction());
+            JButton gererOffresButton = createStyledButton("Gérer les offres", bleuClair, e -> gererOffresAction());
+            buttonPanel.add(gererCandidaturesButton);
+            buttonPanel.add(gererOffresButton);
+        } else {
+            JButton postulerButton = createStyledButton("Postuler", bleuClair, e -> postulerAction());
+            buttonPanel.add(postulerButton);
+        }
+
+        JButton refreshButton = createStyledButton("Actualiser", bleuFonce, e -> loadAnnonces());
         buttonPanel.add(refreshButton);
 
         return buttonPanel;
     }
 
+    private void gererCandidaturesAction() {
+        navigateTo(new GestionCandidaturesView());
+    }
+
+    private void gererOffresAction() {
+        navigateTo(new GestionOffresView());
+    }
     private JButton createStyledButton(String text, Color bgColor, ActionListener action) {
         JButton button = new JButton(text);
         button.setBackground(bgColor);
@@ -158,129 +175,81 @@ public class OffreEmploiView extends JFrame {
     }
 
     private void postulerAction() {
-        System.out.println(">>> Début de la méthode postulerAction()");
-
-        // Vérification de la connexion de l'utilisateur (ici on suppose un attribut "userId" dans la session)
-        Integer userId = 0;
-        if(SessionUtilisateur.getInstance().getEmail()!=null) {
-            userId = SessionUtilisateur.getInstance().getId();
-        } else {
+        // Vérification de la connexion de l'utilisateur
+        if (SessionUtilisateur.getInstance().getEmail() == null) {
             JOptionPane.showMessageDialog(this,
                     "Vous devez être connecté pour postuler. Redirection vers la page de connexion.",
                     "Non connecté",
                     JOptionPane.WARNING_MESSAGE);
-            redirectToLoginPage(); // Méthode fictive qui redirige l'utilisateur vers la page de connexion
-            System.out.println("Utilisateur non connecté, redirection vers la page de connexion.");
+            redirectToLoginPage();
             return;
         }
-        System.out.println("Utilisateur connecté avec l'ID : " + userId);
 
         int selectedRow = annoncesTable.getSelectedRow();
-        System.out.println("Ligne sélectionnée dans le tableau : " + selectedRow);
-
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this,
                     "Veuillez sélectionner une offre à laquelle postuler",
                     "Aucune sélection",
                     JOptionPane.WARNING_MESSAGE);
-            System.out.println("Aucune offre sélectionnée. Fin de méthode.");
             return;
         }
 
         String titreOffre = (String) tableModel.getValueAt(selectedRow, 0);
-        System.out.println("Titre de l'offre sélectionnée : " + titreOffre);
 
         int option = JOptionPane.showConfirmDialog(this,
                 "Voulez-vous postuler à l'offre : " + titreOffre + "?",
                 "Confirmation de postulation",
                 JOptionPane.YES_NO_OPTION);
 
-        System.out.println("Option de confirmation choisie : " + option);
-
         if (option == JOptionPane.YES_OPTION) {
             try {
-                System.out.println("Création de l'objet DAO pour les offres...");
                 OffreEmploiDAOImpl offreDAO = new OffreEmploiDAOImpl();
-                System.out.println("Recherche de l'annonce par titre...");
-
                 Annonce annonce = offreDAO.getAnnonceByTitre(titreOffre);
-                System.out.println("Annonce récupérée : " + (annonce != null ? annonce : "null"));
 
                 if (annonce == null) {
                     JOptionPane.showMessageDialog(this,
                             "Annonce introuvable.",
                             "Erreur",
                             JOptionPane.ERROR_MESSAGE);
-                    System.out.println("Annonce introuvable. Fin de méthode.");
                     return;
                 }
 
-                String document = "lettre_motivation_" + userId + ".pdf"; // Utilisation de l'ID du demandeur connecté
-
-                System.out.println("Création de la candidature...");
+                // Création de la candidature
                 Candidature candidature = new Candidature();
                 candidature.setIdAnnonce(annonce.getId());
-                candidature.setIdDemandeur(userId);
-                candidature.setDateCandidature(new java.util.Date());
+                candidature.setIdDemandeur(SessionUtilisateur.getInstance().getId());
+                candidature.setDateCandidature(new java.sql.Date(System.currentTimeMillis()));
                 candidature.setStatut("En attente");
                 candidature.setNote(0);
-                candidature.setDocuments(document);
+                candidature.setDocuments("lettre_motivation_" + SessionUtilisateur.getInstance().getId() + ".pdf");
 
-                // Affichage des infos de la candidature
-                System.out.println("Candidature préparée :");
-                System.out.println("  ID Annonce     : " + candidature.getIdAnnonce());
-                System.out.println("  ID Demandeur   : " + candidature.getIdDemandeur());
-                System.out.println("  Date           : " + candidature.getDateCandidature());
-                System.out.println("  Statut         : " + candidature.getStatut());
-                System.out.println("  Note           : " + candidature.getNote());
-                System.out.println("  Documents      : " + candidature.getDocuments());
-
+                // Ajout de la candidature
                 CandidatureDAOImpl candidatureDAO = new CandidatureDAOImpl();
-                System.out.println("Ajout de la candidature dans la BDD...");
                 candidatureDAO.ajouterCandidature(candidature);
-                System.out.println("Candidature ajoutée avec succès.");
 
-                JOptionPane.showMessageDialog(this,
+                /*JOptionPane.showMessageDialog(this,
                         "Votre candidature a été envoyée avec succès!",
                         "Succès",
                         JOptionPane.INFORMATION_MESSAGE);
 
+                 */
             } catch (SQLException e) {
                 JOptionPane.showMessageDialog(this,
-                        "Erreur lors de l'envoi de la candidature: " + e.getMessage(),
+                        "Erreur lors de la postulation: " + e.getMessage(),
                         "Erreur",
                         JOptionPane.ERROR_MESSAGE);
-                System.out.println("Erreur SQL attrapée : " + e.getMessage());
                 e.printStackTrace();
             }
-        } else {
-            System.out.println("L'utilisateur a annulé la postulation.");
         }
-
-        System.out.println(">>> Fin de la méthode postulerAction()");
     }
 
-    // Méthode pour récupérer l'ID de l'utilisateur depuis la session (à adapter selon ton gestionnaire de session)
-    private Integer getUserIdFromSession() {
-        // Exemple : on peut utiliser un framework comme HttpSession dans un contexte web
-        // Si l'utilisateur est connecté, il doit avoir un attribut "userId" dans la session
-        // return session.getAttribute("userId");
-
-        // Ici, on retourne un ID fictif pour simuler l'utilisateur connecté
-        Integer userId = 1;  // Remplacer cette valeur par celle issue de ta logique de session
-        System.out.println("User ID récupéré depuis la session : " + userId);
-        return userId;
-    }
-
-    // Méthode fictive pour rediriger vers la page de connexion
     private void redirectToLoginPage() {
-        // Cette méthode redirige l'utilisateur vers la page de connexion
-        // En réalité, ici tu utiliseras une redirection dans ton application
-        // Si tu es sur un environnement web, tu pourrais faire quelque chose comme :
-        // response.sendRedirect("loginPage.jsp");
-        System.out.println("Redirection vers la page de connexion...");
+        navigateTo(new LoginView("mode"));
     }
 
-
-
+    private void navigateTo(JFrame newFrame) {
+        dispose(); // Ferme la fenêtre actuelle
+        newFrame.setLocationRelativeTo(null);
+        newFrame.setVisible(true);
+    }
 }

@@ -1,5 +1,6 @@
 package Vue.Components;
 
+import DAO.EmployeurDAOImpl;
 import Modele.SessionUtilisateur;
 import Vue.*;
 
@@ -7,7 +8,10 @@ import javax.swing.*;
 import java.awt.*;
 
 public class HeaderComponent extends JPanel {
+
     public HeaderComponent(JFrame parentFrame) {
+        // Mise à jour de la référence du frame courant
+
         // Couleurs
         Color bleuFonce = new Color(9, 18, 66);
         Color bleuClair = new Color(45, 132, 255);
@@ -101,11 +105,13 @@ public class HeaderComponent extends JPanel {
             JMenuItem menuInscription = new JMenuItem("Inscription");
 
             menuConnexion.addActionListener(e -> {
+                // Assurer que la navigation fonctionne depuis le menu
                 parentFrame.dispose();
                 LoginView login = new LoginView("connexion");
                 login.setVisible(true);  // <--- ici
             });
             menuInscription.addActionListener(e -> {
+                // Assurer que la navigation fonctionne depuis le menu
                 parentFrame.dispose();
                 LoginView login = new LoginView("inscription");
                 login.setVisible(true);  // <--- ici
@@ -132,14 +138,18 @@ public class HeaderComponent extends JPanel {
             JMenuItem deconnexion = new JMenuItem("Déconnexion");
 
             profil.addActionListener(ev -> {
+                // Assurer que la navigation fonctionne depuis le menu
                 parentFrame.dispose();
                 new ProfilPage();
             });
             candidatures.addActionListener(ev -> {
+                // Assurer que la navigation fonctionne depuis le menu
                 parentFrame.dispose();
                 new CandidatureView();
             });
             deconnexion.addActionListener(ev -> {
+                SessionUtilisateur.getInstance().clearSession();
+                // Assurer que la navigation fonctionne depuis le menu
                 SessionUtilisateur.getInstance().clearSession();
                 parentFrame.dispose();
                 new MainPage();

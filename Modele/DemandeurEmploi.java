@@ -17,6 +17,12 @@ public class DemandeurEmploi extends Utilisateur{
         super(user);
     }
 
+    public DemandeurEmploi(int idDemandeurs, String nomDemandeur, String prenomDemandeur, int ageDemandeur, String eMailDemandeur, String adresseDemandeur, String experienceDemandeur, String cvDemandeur, String s, String demandeur) {
+        super(nomDemandeur,prenomDemandeur,ageDemandeur,eMailDemandeur,adresseDemandeur,experienceDemandeur,cvDemandeur,cvDemandeur,"Vivant");
+    }
+
+    public String getRole(){return "Demandeur";}
+    public String getStatut(){return "Demandeur";}
     public String getLienCv() {
             return lienCv;
     }

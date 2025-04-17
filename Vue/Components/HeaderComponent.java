@@ -11,7 +11,7 @@ public class HeaderComponent extends JPanel {
 
     public HeaderComponent(JFrame parentFrame) {
         // Mise à jour de la référence du frame courant
-
+        System.out.println(SessionUtilisateur.getInstance().getRole());
         // Couleurs
         Color bleuFonce = new Color(9, 18, 66);
         Color bleuClair = new Color(45, 132, 255);
@@ -25,7 +25,6 @@ public class HeaderComponent extends JPanel {
         ImageIcon logoIcon = new ImageIcon("images/telechargement2.png");
         Image scaledLogo = logoIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
         logoIcon = new ImageIcon(scaledLogo);
-
         JLabel logoLabel = new JLabel(" MatchaJob", logoIcon, JLabel.LEFT);
         logoLabel.setFont(new Font("SansSerif", Font.BOLD, 22));
         logoLabel.setForeground(bleuFonce);
@@ -52,63 +51,125 @@ public class HeaderComponent extends JPanel {
         JPanel menuPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 30, 5));
         menuPanel.setBackground(Color.WHITE);
 
-        String[] menuItems = {"trouver un emploi", "candidats", "recruteurs"};
-        for (String item : menuItems) {
-            JLabel label = new JLabel(item);
-            label.setFont(new Font("SansSerif", Font.PLAIN, 16));
-            label.setForeground(bleuFonce);
-            label.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        if (SessionUtilisateur.getInstance().getRole() == "Admin") {
+            String[] menuItems = {"trouver un emploi", "Consulter Candidats", "recruteurs"};
+            for (String item : menuItems) {
+                JLabel label = new JLabel(item);
+                label.setFont(new Font("SansSerif", Font.PLAIN, 16));
+                label.setForeground(bleuFonce);
+                label.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-            if (item.equals("trouver un emploi")) {
-                label.addMouseListener(new java.awt.event.MouseAdapter() {
-                    public void mousePressed(java.awt.event.MouseEvent evt) {
-                        parentFrame.dispose();
-                        new OffreEmploiView();
-                    }
-                    public void mouseEntered(java.awt.event.MouseEvent evt) {
-                        label.setForeground(bleuClair);
-                    }
-                    public void mouseExited(java.awt.event.MouseEvent evt) {
-                        label.setForeground(bleuFonce);
-                    }
-                });
-            }
-            if (item.equals("candidats")) {
-                label.addMouseListener(new java.awt.event.MouseAdapter() {
-                    public void mousePressed(java.awt.event.MouseEvent evt) {
-                        parentFrame.dispose();
-                        new CandidatureView();
-                    }
-                    public void mouseEntered(java.awt.event.MouseEvent evt) {
-                        label.setForeground(bleuClair);
-                    }
-                    public void mouseExited(java.awt.event.MouseEvent evt) {
-                        label.setForeground(bleuFonce);
-                    }
-                });
-            }
+                if (item.equals("trouver un emploi")) {
+                    label.addMouseListener(new java.awt.event.MouseAdapter() {
+                        public void mousePressed(java.awt.event.MouseEvent evt) {
+                            parentFrame.dispose();
+                            new OffreEmploiView();
+                        }
+                        public void mouseEntered(java.awt.event.MouseEvent evt) {
+                            label.setForeground(bleuClair);
+                        }
+                        public void mouseExited(java.awt.event.MouseEvent evt) {
+                            label.setForeground(bleuFonce);
+                        }
+                    });
+                }
+                if (item.equals("Consulter Candidats")) {
+                    label.addMouseListener(new java.awt.event.MouseAdapter() {
+                        public void mousePressed(java.awt.event.MouseEvent evt) {
+                            parentFrame.dispose();
+                            new ListeUtilisateursView();
+                        }
+                        public void mouseEntered(java.awt.event.MouseEvent evt) {
+                            label.setForeground(bleuClair);
+                        }
+                        public void mouseExited(java.awt.event.MouseEvent evt) {
+                            label.setForeground(bleuFonce);
+                        }
+                    });
+                }
 
-            if (item.equals("recruteurs")) {
-                label.addMouseListener(new java.awt.event.MouseAdapter() {
-                    public void mousePressed(java.awt.event.MouseEvent evt) {
-                        parentFrame.dispose();
-                        new EntreprisePage(new EmployeurDAOImpl(
-                            "jdbc:mysql://localhost:3306/recrutement",
-                            "root",
-                            ""
-                        )).show();
-                    }
-                    public void mouseEntered(java.awt.event.MouseEvent evt) {
-                        label.setForeground(bleuClair);
-                    }
-                    public void mouseExited(java.awt.event.MouseEvent evt) {
-                        label.setForeground(bleuFonce);
-                    }
-                });
+                if (item.equals("recruteurs")) {
+                    label.addMouseListener(new java.awt.event.MouseAdapter() {
+                        public void mousePressed(java.awt.event.MouseEvent evt) {
+                            parentFrame.dispose();
+                            new EntreprisePage(new EmployeurDAOImpl(
+                                    "jdbc:mysql://localhost:3306/recrutement",
+                                    "root",
+                                    ""
+                            )).show();
+                        }
+
+                        public void mouseEntered(java.awt.event.MouseEvent evt) {
+                            label.setForeground(bleuClair);
+                        }
+                        public void mouseExited(java.awt.event.MouseEvent evt) {
+                            label.setForeground(bleuFonce);
+                        }
+                    });
+                }
+                menuPanel.add(label);
             }
-            menuPanel.add(label);
+            return menuPanel;
+            } else {
+            String[] menuItems = {"trouver un emploi", "Mes Candidatures", "recruteurs"};
+            for (String item : menuItems) {
+                JLabel label = new JLabel(item);
+                label.setFont(new Font("SansSerif", Font.PLAIN, 16));
+                label.setForeground(bleuFonce);
+                label.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+                if (item.equals("trouver un emploi")) {
+                    label.addMouseListener(new java.awt.event.MouseAdapter() {
+                        public void mousePressed(java.awt.event.MouseEvent evt) {
+                            parentFrame.dispose();
+                            new OffreEmploiView();
+                        }
+                        public void mouseEntered(java.awt.event.MouseEvent evt) {
+                            label.setForeground(bleuClair);
+                        }
+                        public void mouseExited(java.awt.event.MouseEvent evt) {
+                            label.setForeground(bleuFonce);
+                        }
+                    });
+                }
+                if (item.equals("candidats")) {
+                    label.addMouseListener(new java.awt.event.MouseAdapter() {
+                        public void mousePressed(java.awt.event.MouseEvent evt) {
+                            parentFrame.dispose();
+                            new CandidatureView();
+                        }
+                        public void mouseEntered(java.awt.event.MouseEvent evt) {
+                            label.setForeground(bleuClair);
+                        }
+                        public void mouseExited(java.awt.event.MouseEvent evt) {
+                            label.setForeground(bleuFonce);
+                        }
+                    });
+                }
+
+                if (item.equals("recruteurs")) {
+                    label.addMouseListener(new java.awt.event.MouseAdapter() {
+                        public void mousePressed(java.awt.event.MouseEvent evt) {
+                            parentFrame.dispose();
+                            new EntreprisePage(new EmployeurDAOImpl(
+                                "jdbc:mysql://localhost:3306/recrutement",
+                                "root",
+                                ""
+                            )).show();
+                        }
+
+                        public void mouseEntered(java.awt.event.MouseEvent evt) {
+                            label.setForeground(bleuClair);
+                        }
+                        public void mouseExited(java.awt.event.MouseEvent evt) {
+                            label.setForeground(bleuFonce);
+                        }
+                    });
+                }
+                menuPanel.add(label);
+            }
+            return menuPanel;
         }
-        return menuPanel;
     }
 
     private JPanel createRightMenu(Color bleuFonce, Color blanc, JFrame parentFrame) {

@@ -33,7 +33,7 @@ public class SessionUtilisateur {
         session.setNom(user.getNom());
         session.setPrenom(user.getPrenom());
         session.setEmail(user.getEmail());
-        session.getRole(user.getType());
+        session.setRole(user.getType());
     }
 
     // ================= GETTERS & SETTERS =================
@@ -62,7 +62,7 @@ public class SessionUtilisateur {
     public void setEmail(String email) {
         this.email = email;
     }
-    public String getRole(String type) {return role;}
+    public String getRole() {return this.role;}
     public void setRole(String role) {
         this.role = role;
     }

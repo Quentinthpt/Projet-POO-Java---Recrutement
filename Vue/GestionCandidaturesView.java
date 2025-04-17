@@ -90,12 +90,12 @@ public class GestionCandidaturesView extends JFrame {
     private JPanel createButtonPanel() {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
 
-        JButton ajouterButton = createStyledButton("Ajouter", bleuClair, e -> ajouterCandidature());
+        //JButton ajouterButton = createStyledButton("Ajouter", bleuClair, e -> ajouterCandidature());
         JButton modifierButton = createStyledButton("Modifier", bleuClair, e -> modifierCandidature());
         JButton supprimerButton = createStyledButton("Supprimer", bleuClair, e -> supprimerCandidature());
         JButton refreshButton = createStyledButton("Actualiser", bleuFonce, e -> loadCandidatures());
 
-        buttonPanel.add(ajouterButton);
+        //buttonPanel.add(ajouterButton);
         buttonPanel.add(modifierButton);
         buttonPanel.add(supprimerButton);
         buttonPanel.add(refreshButton);

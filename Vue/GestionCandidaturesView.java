@@ -184,34 +184,125 @@ public class GestionCandidaturesView extends JFrame {
 
         int idAnnonce = (int) tableModel.getValueAt(selectedRow, 0);
         int idDemandeur = (int) tableModel.getValueAt(selectedRow, 2);
-        String nouveauStatut = (String) tableModel.getValueAt(selectedRow, 4);
-        int nouvelleNote = (int) tableModel.getValueAt(selectedRow, 5);
+        String offreTitle = (String) tableModel.getValueAt(selectedRow, 1);
+        String statutActuel = (String) tableModel.getValueAt(selectedRow, 4);
+        int noteActuelle = (int) tableModel.getValueAt(selectedRow, 5);
 
-        try {
-            CandidatureDAOImpl dao = new CandidatureDAOImpl();
-            Candidature candidature = new Candidature();
-            candidature.setIdAnnonce(idAnnonce);
-            candidature.setIdDemandeur(idDemandeur);
-            candidature.setStatut(nouveauStatut);
-            candidature.setNote(nouvelleNote);
+        // Création de la fenêtre de dialogue
+        JDialog modifierDialog = new JDialog(this, "Modifier la candidature", true);
+        modifierDialog.setSize(400, 300);
+        modifierDialog.setLocationRelativeTo(this);
+        modifierDialog.setLayout(new BorderLayout());
 
-            if (dao.updateCandidature(candidature)) {
-                JOptionPane.showMessageDialog(this,
-                        "Candidature mise à jour avec succès",
-                        "Succès",
-                        JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(this,
-                        "Erreur lors de la mise à jour de la candidature",
+        // Panel principal avec padding
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+        mainPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
+
+        // Info candidature
+        JLabel titleLabel = new JLabel("Modification de candidature");
+        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
+        titleLabel.setForeground(bleuFonce);
+        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel offreLabel = new JLabel("Offre: " + offreTitle);
+        offreLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        offreLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        // Panel pour le statut
+        JPanel statutPanel = new JPanel();
+        statutPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        statutPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+
+        JLabel statutLabel = new JLabel("Statut: ");
+        statutLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
+
+        String[] statutOptions = {"En attente", "En cours", "Accepté", "Refusé"};
+        JComboBox<String> statutComboBox = new JComboBox<>(statutOptions);
+        statutComboBox.setSelectedItem(statutActuel);
+        statutComboBox.setPreferredSize(new Dimension(150, 30));
+
+        statutPanel.add(statutLabel);
+        statutPanel.add(statutComboBox);
+
+        // Panel pour la note
+        JPanel notePanel = new JPanel();
+        notePanel.setLayout(new BoxLayout(notePanel, BoxLayout.Y_AXIS));
+        notePanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80));
+
+        JLabel noteLabel = new JLabel("Note: " + noteActuelle + "%");
+        noteLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        noteLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        JSlider noteSlider = new JSlider(0, 100, noteActuelle);
+        noteSlider.setMajorTickSpacing(20);
+        noteSlider.setMinorTickSpacing(5);
+        noteSlider.setPaintTicks(true);
+        noteSlider.setPaintLabels(true);
+        noteSlider.setPreferredSize(new Dimension(350, 50));
+        noteSlider.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        noteSlider.addChangeListener(e -> {
+            int valeur = noteSlider.getValue();
+            noteLabel.setText("Note: " + valeur + "%");
+        });
+
+        notePanel.add(noteLabel);
+        notePanel.add(Box.createRigidArea(new Dimension(0, 5)));
+        notePanel.add(noteSlider);
+
+        // Panel pour les boutons
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+
+        JButton saveButton = createStyledButton("Enregistrer", bleuClair, e -> {
+            try {
+                CandidatureDAOImpl dao = new CandidatureDAOImpl();
+                Candidature candidature = new Candidature();
+                candidature.setIdAnnonce(idAnnonce);
+                candidature.setIdDemandeur(idDemandeur);
+                candidature.setStatut((String) statutComboBox.getSelectedItem());
+                candidature.setNote(noteSlider.getValue());
+
+                if (dao.updateCandidature(candidature)) {
+                    JOptionPane.showMessageDialog(modifierDialog,
+                            "Candidature mise à jour avec succès",
+                            "Succès",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    modifierDialog.dispose();
+                    loadCandidatures(); // Rafraîchir la table
+                } else {
+                    JOptionPane.showMessageDialog(modifierDialog,
+                            "Erreur lors de la mise à jour de la candidature",
+                            "Erreur",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(modifierDialog,
+                        "Erreur lors de la mise à jour: " + ex.getMessage(),
                         "Erreur",
                         JOptionPane.ERROR_MESSAGE);
             }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this,
-                    "Erreur lors de la mise à jour: " + e.getMessage(),
-                    "Erreur",
-                    JOptionPane.ERROR_MESSAGE);
-        }
+        });
+
+        JButton cancelButton = createStyledButton("Annuler", Color.GRAY, e -> modifierDialog.dispose());
+
+        buttonPanel.add(saveButton);
+        buttonPanel.add(cancelButton);
+
+        // Ajouter tous les composants au panel principal
+        mainPanel.add(titleLabel);
+        mainPanel.add(Box.createRigidArea(new Dimension(0, 15)));
+        mainPanel.add(offreLabel);
+        mainPanel.add(Box.createRigidArea(new Dimension(0, 15)));
+        mainPanel.add(statutPanel);
+        mainPanel.add(Box.createRigidArea(new Dimension(0, 15)));
+        mainPanel.add(notePanel);
+
+        // Ajouter les panels au dialog
+        modifierDialog.add(mainPanel, BorderLayout.CENTER);
+        modifierDialog.add(buttonPanel, BorderLayout.SOUTH);
+
+        modifierDialog.setVisible(true);
     }
 
     private void supprimerCandidature() {
@@ -225,6 +316,7 @@ public class GestionCandidaturesView extends JFrame {
         }
 
         int idAnnonce = (int) tableModel.getValueAt(selectedRow, 0);
+        int idDemandeur = (int) tableModel.getValueAt(selectedRow, 2);
         String offre = (String) tableModel.getValueAt(selectedRow, 1);
 
         int option = JOptionPane.showConfirmDialog(this,
@@ -235,7 +327,7 @@ public class GestionCandidaturesView extends JFrame {
         if (option == JOptionPane.YES_OPTION) {
             try {
                 CandidatureDAOImpl dao = new CandidatureDAOImpl();
-                if (dao.deleteCandidature(idAnnonce, SessionUtilisateur.getInstance().getId())) {
+                if (dao.deleteCandidature(idAnnonce,idDemandeur) ) {
                     loadCandidatures();
                     JOptionPane.showMessageDialog(this,
                             "Candidature supprimée avec succès",

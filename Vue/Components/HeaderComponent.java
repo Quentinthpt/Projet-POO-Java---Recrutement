@@ -132,7 +132,7 @@ public class HeaderComponent extends JPanel {
                         }
                     });
                 }
-                if (item.equals("candidats")) {
+                if (item.equals("Mes Candidatures")) {
                     label.addMouseListener(new java.awt.event.MouseAdapter() {
                         public void mousePressed(java.awt.event.MouseEvent evt) {
                             parentFrame.dispose();

@@ -164,6 +164,7 @@ public class CandidatureDAOImpl {
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, idAnnonce);
             stmt.setInt(2, idDemandeurs);
+            System.out.println(idAnnonce + " demandeur : " + idDemandeurs);
 
             int result = stmt.executeUpdate();
             conn.commit();

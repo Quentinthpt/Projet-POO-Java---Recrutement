@@ -78,7 +78,7 @@ CREATE TABLE IF NOT EXISTS `annonce` (
 INSERT INTO `annonce` (`id_annonce`, `titre_annonce`, `description_annonce`, `experience_requise_annonce`, `salaire_annonce`, `date_debut_annonce`, `statut_annonce`, `lieu_travail_annonce`, `type_contrat_annonce`, `id_admin`, `id_societe`, `id_categorie`) VALUES
 (1, 'Développeur Full Stack', 'Recherche développeur full stack expérimenté', '3 ans', 45000, '2025-05-01', 'Ouvert', 'Paris', 'CDI', 1, 1, 1),
 (7, 'AZEAE', 'QSDQD', '2-8 ans', 1000000000, '2025-08-16', '', 'Paris', 'Stage', 1, 1, 1),
-(8, 'Innsertion', 'Cette alternance est faite pour s\'insérer dans la société', '2-8 ans', 1200, '2025-04-16', '', 'Massy Palaiseau', 'Alternance', 1, 1, 1),
+(8, 'Insertion', 'Cette alternance est faite pour s`insérer dans la société', '2-8 ans', 1200, '2025-04-16', '', 'Massy Palaiseau', 'Alternance', 1, 1, 1),
 (9, 'Test', 'test', '0-2 ans', 400000, '2029-04-17', '', 'Paris', 'CDD', 1, 1, 1),
 (10, 'CACA', 'CACA', '+8 ans', 20, '2027-04-18', '', 'CACA Land', 'Stage', 1, 1, 1);
 

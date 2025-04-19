@@ -1,11 +1,15 @@
 package Vue.Components;
 
 import DAO.EmployeurDAOImpl;
+import DAO.NotificationDAO;
+import DAO.NotificationDAOImpl;
+import Modele.Notification;
 import Modele.SessionUtilisateur;
 import Vue.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 public class HeaderComponent extends JPanel {
 
@@ -111,14 +115,14 @@ public class HeaderComponent extends JPanel {
             }
             return menuPanel;
             } else {
-            String[] menuItems = {"trouver un emploi", "Mes Candidatures", "recruteurs"};
+            String[] menuItems = {"Trouver un emploi", "Mes Candidatures", "Recruteurs"};
             for (String item : menuItems) {
                 JLabel label = new JLabel(item);
                 label.setFont(new Font("SansSerif", Font.PLAIN, 16));
                 label.setForeground(bleuFonce);
                 label.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-                if (item.equals("trouver un emploi")) {
+                if (item.equals("Trouver un emploi")) {
                     label.addMouseListener(new java.awt.event.MouseAdapter() {
                         public void mousePressed(java.awt.event.MouseEvent evt) {
                             parentFrame.dispose();
@@ -133,21 +137,23 @@ public class HeaderComponent extends JPanel {
                     });
                 }
                 if (item.equals("Mes Candidatures")) {
-                    label.addMouseListener(new java.awt.event.MouseAdapter() {
-                        public void mousePressed(java.awt.event.MouseEvent evt) {
-                            parentFrame.dispose();
-                            new CandidatureView();
-                        }
-                        public void mouseEntered(java.awt.event.MouseEvent evt) {
-                            label.setForeground(bleuClair);
-                        }
-                        public void mouseExited(java.awt.event.MouseEvent evt) {
-                            label.setForeground(bleuFonce);
-                        }
-                    });
+                    if(SessionUtilisateur.getInstance().getEmail() != null){
+                        label.addMouseListener(new java.awt.event.MouseAdapter() {
+                            public void mousePressed(java.awt.event.MouseEvent evt) {
+                                parentFrame.dispose();
+                                new CandidatureView();
+                            }
+                            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                                label.setForeground(bleuClair);
+                            }
+                            public void mouseExited(java.awt.event.MouseEvent evt) {
+                                label.setForeground(bleuFonce);
+                            }
+                        });
+                    }
                 }
 
-                if (item.equals("recruteurs")) {
+                if (item.equals("Recruteurs")) {
                     label.addMouseListener(new java.awt.event.MouseAdapter() {
                         public void mousePressed(java.awt.event.MouseEvent evt) {
                             parentFrame.dispose();
@@ -207,6 +213,7 @@ public class HeaderComponent extends JPanel {
             });
 
             rightMenu.add(new JLabel("♡ 0"));
+
             rightMenu.add(monCompteLabel);
         } else {
             JLabel monCompte = new JLabel("👤 Mon compte");
@@ -245,9 +252,60 @@ public class HeaderComponent extends JPanel {
                 }
             });
 
-            rightMenu.add(new JLabel("♡ 0"));
+
+            // Charger le nombre de notifications non lues
+            NotificationDAOImpl notifDAO = new NotificationDAOImpl();
+            int notifCount = notifDAO.countNotificationsNonLues(SessionUtilisateur.getInstance().getId());
+
+// Déterminer l'icône du cœur (plein ou vide)
+            String coeur = notifCount > 0 ? "♥" : "♡";
+            JLabel notifLabel = new JLabel(coeur + " " + notifCount);
+            notifLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            notifLabel.setFont(new Font("SansSerif", Font.PLAIN, 20));
+            notifLabel.setToolTipText("Voir mes notifications");
+
+// Action quand on clique sur le cœur
+            notifLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+                public void mousePressed(java.awt.event.MouseEvent e) {
+                    // Ouvrir la fenêtre de notification
+                    new NotificationView();
+
+                    // Après lecture, remettre à zéro
+                    notifLabel.setText("♡ 0");
+                }
+            });
+
+// Ajouter au menu
+            rightMenu.add(notifLabel);
+
+
+
+            //rightMenu.add(new JLabel("♡ 0"));
             rightMenu.add(monCompte);
         }
         return rightMenu;
     }
+
+    private int getNbNotifNonLues() {
+        NotificationDAOImpl dao = new NotificationDAOImpl();
+        return dao.getNotificationsNonLues(SessionUtilisateur.getInstance().getId()).size();
+    }
+
+    private void afficherNotifications(JFrame parentFrame) {
+        NotificationDAOImpl dao = new NotificationDAOImpl();
+        List<Notification> notifs = dao.getNotificationsNonLues(SessionUtilisateur.getInstance().getId());
+
+        if (notifs.isEmpty()) {
+            JOptionPane.showMessageDialog(parentFrame, "Aucune nouvelle notification.", "Notifications", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            StringBuilder msg = new StringBuilder("Notifications :\n\n");
+            for (Notification n : notifs) {
+                msg.append("• ").append(n.getMessage()).append("\n");
+            }
+
+            JOptionPane.showMessageDialog(parentFrame, msg.toString(), "Notifications", JOptionPane.INFORMATION_MESSAGE);
+            dao.marquerCommeLues(SessionUtilisateur.getInstance().getId());
+        }
+    }
+
 }

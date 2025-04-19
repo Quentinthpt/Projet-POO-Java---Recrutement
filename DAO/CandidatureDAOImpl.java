@@ -51,6 +51,15 @@ public class CandidatureDAOImpl {
             int result = stmt.executeUpdate();
             conn.commit();
 
+            // 🔔 Notifier tous les administrateurs
+            NotificationDAOImpl notificationDAO = new NotificationDAOImpl();
+            List<Integer> adminIds = notificationDAO.getAllAdminIds(); // à implémenter dans NotificationDAO
+            String message = "Une nouvelle candidature a été envoyée pour l'annonce ID " + candidature.getIdAnnonce();
+
+            for (int adminId : adminIds) {
+                notificationDAO.ajouterNotification(adminId, message);
+            }
+
             System.out.println("Candidature ajoutée avec succès dans la base de données.");
             System.out.println(">>> Fin de la méthode ajouterCandidature()");
 
@@ -122,6 +131,12 @@ public class CandidatureDAOImpl {
 
             int result = stmt.executeUpdate();
             conn.commit();
+
+            // 🔔 Notifier le demandeur de la mise à jour
+            NotificationDAOImpl notificationDAO = new NotificationDAOImpl();
+            String message = "Le statut de votre candidature pour l'annonce ID " + candidature.getIdAnnonce() + " a été mis à jour à : " + candidature.getStatut();
+            notificationDAO.ajouterNotification(candidature.getIdDemandeur(), message);
+
             return result > 0;
 
         } catch (SQLException e) {
@@ -260,7 +275,7 @@ public class CandidatureDAOImpl {
         List<String[]> data = new ArrayList<>();
         String sql = """
         SELECT a.titre_annonce, a.description_annonce, a.salaire_annonce, a.lieu_travail_annonce,
-               a.type_contrat_annonce, a.experience_requise_annonce, a.date_debut_annonce
+               a.type_contrat_annonce, a.experience_requise_annonce, a.date_debut_annonce, c.statut_candidature
         FROM candidature c
         JOIN annonce a ON c.id_annonce = a.id_annonce
         WHERE c.id_demandeurs = ?
@@ -272,7 +287,7 @@ public class CandidatureDAOImpl {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                String[] row = new String[7];
+                String[] row = new String[8];
                 row[0] = rs.getString("titre_annonce");
                 row[1] = rs.getString("description_annonce");
                 row[2] = rs.getString("salaire_annonce");
@@ -280,6 +295,7 @@ public class CandidatureDAOImpl {
                 row[4] = rs.getString("type_contrat_annonce");
                 row[5] = rs.getString("experience_requise_annonce");
                 row[6] = rs.getString("date_debut_annonce");
+                row[7] = rs.getString("statut_candidature");
                 data.add(row);
             }
         } catch (SQLException e) {

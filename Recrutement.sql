@@ -160,6 +160,22 @@ INSERT INTO `demandeurs` (`id_demandeurs`, `nom_demandeur`, `prenom_demandeur`, 
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `notification`
+--
+
+DROP TABLE IF EXISTS `notification`;
+CREATE TABLE IF NOT EXISTS `notification` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `id_utilisateur` int DEFAULT NULL,
+    `message` text,
+    `lu` tinyint(1) DEFAULT '0',
+    `date_notification` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+    ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `societe`
 --
 

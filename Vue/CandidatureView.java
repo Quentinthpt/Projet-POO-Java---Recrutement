@@ -38,7 +38,7 @@ public class CandidatureView extends JFrame {
         List<String[]> lignes = candidatureDAO.getInfosAnnoncesCandidature(session.getId());
         String[][] data = lignes.toArray(new String[0][]);
         String[] colonne = {"Titre", "Description", "Salaire", "Lieu",
-                "Type de contrat", "Expérience requise", "Date début"};
+                "Type de contrat", "Expérience requise", "Date début", "Statut"};
 /*
         for (int i = 0; i < candidatures.size(); i++) {
             Candidature candidature = candidatures.get(i);
@@ -88,7 +88,7 @@ public class CandidatureView extends JFrame {
         // Boutons
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
 
-        JButton detailsBtn = new JButton("Voir détails");
+        JButton detailsBtn = new JButton("Voir Statut");
         detailsBtn.setBackground(bleuClair);
         detailsBtn.setForeground(blanc);
         detailsBtn.addActionListener(e -> voirDetailsCandidature(table));
@@ -130,6 +130,9 @@ public class CandidatureView extends JFrame {
             return;
         }
 
+        String titre = table.getValueAt(selectedRow, 0).toString();
+        String statut = table.getValueAt(selectedRow, 7).toString();
+        /*
         String Titre = table.getValueAt(selectedRow, 0).toString();
         String Description = table.getValueAt(selectedRow, 1).toString();
         String Salaire = table.getValueAt(selectedRow, 2).toString();
@@ -137,17 +140,13 @@ public class CandidatureView extends JFrame {
         String Type_de_Contrat = table.getValueAt(selectedRow, 4).toString();
         String Experience = table.getValueAt(selectedRow, 5).toString();
         String Date = table.getValueAt(selectedRow, 6).toString();
+        */
+
 
         String message = String.format(
-                "Détails de la candidature:\n\n" +
-                        "Titre: %s\n" +
-                        "Description: %s\n" +
-                        "Salaire: %s\n" +
-                        "Lieu: %s\n" +
-                        "Type de Contrat: %s\n" +
-                        "Expérience requise: %s\n"+
-                        "Date: %s",
-                Titre, Description, Salaire, Lieu, Type_de_Contrat, Experience, Date);
+                "Candidature pour l'offre: %s:\n\n" +
+                        "Statut: %s",
+                titre, statut);
 
         JOptionPane.showMessageDialog(this,
                 message,

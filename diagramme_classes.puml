@@ -1,0 +1,150 @@
+@startuml
+'———————————————————————————————————————————————
+'  Diagramme de classes – Projet Recrutement
+'———————————————————————————————————————————————
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+
+'=====================================================================
+' 1) COUCHE MODELE
+'=====================================================================
+package "Modele" {
+
+    class Utilisateur {
+        -id : int
+        -nom : String
+        -prenom : String
+        -age : int
+        -email : String
+        -adresse : String
+        -motDePasse : String
+        +getId()
+        +getNom()
+        +setNom()
+        ..getters/setters..
+    }
+
+    class DemandeurEmploi {
+        -lienCv : String
+        -competences : List<String>
+        -experiences : List<String>
+        -formation : String
+    }
+
+    class Employeur {
+        -nomEntreprise : String
+        -secteurActivite : String
+        -adresse : String
+        -telephone : String
+        -email : String
+        -description : String
+    }
+
+    class AgenceRecrutement
+    class OffreEmploi
+    class Annonce
+    class Candidature {
+        +date   : Date
+        +statut : String
+        +note   : int
+    }
+    class Categorie
+    class Notification
+    class SessionUtilisateur
+    class SessionManager
+}
+
+DemandeurEmploi --|> Utilisateur
+Employeur        ..|> Utilisateur
+Candidature --> DemandeurEmploi
+Candidature --> OffreEmploi
+OffreEmploi --> Employeur
+OffreEmploi --> Categorie
+
+
+'=====================================================================
+' 2) COUCHE DAO
+'=====================================================================
+package "DAO" {
+
+    interface UtilisateurDAO
+    interface DemandeurEmploiDAO
+    interface EmployeurDAO
+    interface OffreEmploiDAO
+    interface CandidatureDAO
+    interface CategorieDAO
+    interface NotificationDAO
+    interface AgenceRecrutementDAO
+
+    class UtilisateurDAOImpl
+    class DemandeurEmploiDAOImpl
+    class EmployeurDAOImpl
+    class OffreEmploiDAOImpl
+    class CandidatureDAOImpl
+    class CategorieDAOImpl
+    class NotificationDAOImpl
+    class AgenceRecrutementDAOImpl
+}
+
+UtilisateurDAOImpl         ..|> UtilisateurDAO
+DemandeurEmploiDAOImpl     ..|> DemandeurEmploiDAO
+EmployeurDAOImpl           ..|> EmployeurDAO
+OffreEmploiDAOImpl         ..|> OffreEmploiDAO
+CandidatureDAOImpl         ..|> CandidatureDAO
+CategorieDAOImpl           ..|> CategorieDAO
+NotificationDAOImpl        ..|> NotificationDAO
+AgenceRecrutementDAOImpl   ..|> AgenceRecrutementDAO
+
+
+'=====================================================================
+' 3) COUCHE CONTROLEUR
+'=====================================================================
+package "Controleur" {
+    class Main
+    class AuthentificationController
+    class DemandeurEmploiController
+    class OffreEmploiController
+    class CandidatureController
+    class ReportingController
+}
+
+Main                       --> AuthentificationController
+AuthentificationController --> UtilisateurDAO
+DemandeurEmploiController  --> DemandeurEmploiDAO
+OffreEmploiController      --> OffreEmploiDAO
+CandidatureController      --> OffreEmploiDAO
+CandidatureController      --> CandidatureDAO
+ReportingController        --> CandidatureDAO
+
+
+'=====================================================================
+' 4) COUCHE VUE (Swing)
+'=====================================================================
+package "Vue" {
+    class LoginView
+    class MainPage
+    class ProfilPage
+    class ProfilModifierView
+    class RecruteurPage
+    class EntreprisePage
+    class AgenceRecrutementView
+    class GestionOffresView
+    class GestionCandidaturesView
+    class OffreEmploiView
+    class CandidatureView
+    class ReportingView
+    class ListeUtilisateursView
+    class NotificationView
+    class HeaderComponent
+    class FooterComponent
+}
+
+' ——— Liaisons principales Vue -> Contrôleur ———
+LoginView        ..> AuthentificationController
+MainPage         ..> DemandeurEmploiController
+MainPage         ..> OffreEmploiController
+OffreEmploiView  ..> OffreEmploiController
+CandidatureView  ..> CandidatureController
+ReportingView    ..> ReportingController
+
+@enduml

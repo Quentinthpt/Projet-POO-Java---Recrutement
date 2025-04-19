@@ -20,15 +20,16 @@ public class EntreprisePage extends JFrame {
     private JButton clearButton;
     private EmployeurDAOImpl clientDAO;
     private DefaultTableModel tableModel;
-    
+
     // Nouveaux champs pour les filtres
     private JComboBox<String> secteurComboBox;
     private JTextField nomEntrepriseField;
     private JTextField villeField;
+    private JTextField descriptionField;
 
     public EntreprisePage(EmployeurDAOImpl clientDAO) {
         this.clientDAO = clientDAO;
-        
+
         setTitle("MatchaJob - Entreprises");
         setSize(1200, 800);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -77,12 +78,12 @@ public class EntreprisePage extends JFrame {
         filterPanel = new JPanel(new GridLayout(0, 1, 10, 10));
         filterPanel.setBackground(Color.WHITE);
         filterPanel.setBorder(BorderFactory.createTitledBorder(
-            BorderFactory.createLineBorder(bleuFonce),
-            "Filtres de recherche",
-            javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
-            javax.swing.border.TitledBorder.DEFAULT_POSITION,
-            new Font("SansSerif", Font.BOLD, 16),
-            bleuFonce
+                BorderFactory.createLineBorder(bleuFonce),
+                "Filtres de recherche",
+                javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
+                javax.swing.border.TitledBorder.DEFAULT_POSITION,
+                new Font("SansSerif", Font.BOLD, 16),
+                bleuFonce
         ));
 
         // Ajout des filtres
@@ -92,16 +93,16 @@ public class EntreprisePage extends JFrame {
         JPanel resultPanel = new JPanel(new BorderLayout());
         resultPanel.setBackground(Color.WHITE);
         resultPanel.setBorder(BorderFactory.createTitledBorder(
-            BorderFactory.createLineBorder(bleuFonce),
-            "Résultats",
-            javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
-            javax.swing.border.TitledBorder.DEFAULT_POSITION,
-            new Font("SansSerif", Font.BOLD, 16),
-            bleuFonce
+                BorderFactory.createLineBorder(bleuFonce),
+                "Résultats",
+                javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
+                javax.swing.border.TitledBorder.DEFAULT_POSITION,
+                new Font("SansSerif", Font.BOLD, 16),
+                bleuFonce
         ));
 
         // Création du modèle de table
-        String[] columnNames = {"Nom", "Secteur d'activité", "Adresse", "Téléphone", "Email", "Description"};
+        String[] columnNames = {"Nom", "Secteur d'activité", "Adresse", "Numéro de téléphone", "Email", "Description"};
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -128,7 +129,7 @@ public class EntreprisePage extends JFrame {
         columnModel.getColumn(0).setPreferredWidth(150); // Nom
         columnModel.getColumn(1).setPreferredWidth(150); // Secteur d'activité
         columnModel.getColumn(2).setPreferredWidth(200); // Adresse
-        columnModel.getColumn(3).setPreferredWidth(100); // Téléphone
+        columnModel.getColumn(3).setPreferredWidth(100); // Numéro de téléphone
         columnModel.getColumn(4).setPreferredWidth(150); // Email
         columnModel.getColumn(5).setPreferredWidth(300); // Description
 
@@ -145,10 +146,10 @@ public class EntreprisePage extends JFrame {
                 List<String> results = clientDAO.executeQuery(query);
                 displayResults(results);
             } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(this, 
-                    "Erreur SQL: " + ex.getMessage(),
-                    "Erreur",
-                    JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this,
+                        "Erreur SQL: " + ex.getMessage(),
+                        "Erreur",
+                        JOptionPane.ERROR_MESSAGE);
             }
         });
 
@@ -156,6 +157,7 @@ public class EntreprisePage extends JFrame {
             secteurComboBox.setSelectedIndex(0);
             nomEntrepriseField.setText("");
             villeField.setText("");
+            descriptionField.setText("");
             tableModel.setRowCount(0);
         });
 
@@ -184,7 +186,7 @@ public class EntreprisePage extends JFrame {
 
     private void initializeFilters() {
         Color bleuFonce = new Color(9, 18, 66);
-        
+
         // Secteur d'activité
         JLabel secteurLabel = new JLabel("Secteur d'activité :");
         secteurLabel.setForeground(bleuFonce);
@@ -221,14 +223,26 @@ public class EntreprisePage extends JFrame {
         villePanel.add(villeLabel);
         villePanel.add(villeField);
         filterPanel.add(villePanel);
+
+        // Description
+        JLabel descriptionLabel = new JLabel("Description :");
+        descriptionLabel.setForeground(bleuFonce);
+        descriptionLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        descriptionField = new JTextField(20);
+        descriptionField.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        JPanel descriptionPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        descriptionPanel.setBackground(Color.WHITE);
+        descriptionPanel.add(descriptionLabel);
+        descriptionPanel.add(descriptionField);
+        filterPanel.add(descriptionPanel);
     }
 
     private String buildQuery() {
-        StringBuilder query = new StringBuilder("SELECT * FROM societe");
-        
+        StringBuilder query = new StringBuilder("SELECT CONCAT_WS('|', nom_societe, secteur_activite_societe, adresse_societe, numero_telephone_societe, email_societe, description_societe) FROM societe");
+
         // Vérifier si au moins un filtre est utilisé
         boolean hasFilter = false;
-        
+
         // Filtre secteur d'activité
         String secteur = (String) secteurComboBox.getSelectedItem();
         if (!secteur.equals("Tous les secteurs")) {
@@ -240,7 +254,7 @@ public class EntreprisePage extends JFrame {
             }
             query.append(" secteur_activite_societe LIKE '%").append(secteur).append("%'");
         }
-        
+
         // Filtre nom de l'entreprise
         String nomEntreprise = nomEntrepriseField.getText().trim();
         if (!nomEntreprise.isEmpty()) {
@@ -252,7 +266,7 @@ public class EntreprisePage extends JFrame {
             }
             query.append(" nom_societe LIKE '%").append(nomEntreprise).append("%'");
         }
-        
+
         // Filtre ville
         String ville = villeField.getText().trim();
         if (!ville.isEmpty()) {
@@ -264,7 +278,19 @@ public class EntreprisePage extends JFrame {
             }
             query.append(" adresse_societe LIKE '%").append(ville).append("%'");
         }
-        
+
+        // Filtre description
+        String description = descriptionField.getText().trim();
+        if (!description.isEmpty()) {
+            if (!hasFilter) {
+                query.append(" WHERE");
+                hasFilter = true;
+            } else {
+                query.append(" AND");
+            }
+            query.append(" description_societe LIKE '%").append(description).append("%'");
+        }
+
         return query.toString();
     }
 
@@ -275,21 +301,13 @@ public class EntreprisePage extends JFrame {
         // Ignorer la première ligne (en-tête) et traiter les données
         for (int i = 1; i < results.size(); i++) {
             String row = results.get(i);
-            // Diviser la ligne en colonnes en utilisant les espaces fixes
-            String[] parts = new String[6];
-            int startIndex = 0;
-            for (int j = 0; j < 6; j++) {
-                if (startIndex < row.length()) {
-                    int endIndex = Math.min(startIndex + 20, row.length());
-                    parts[j] = row.substring(startIndex, endIndex).trim();
-                    startIndex = endIndex;
-                } else {
-                    parts[j] = "";
-                }
-            }
+            // Utiliser un séparateur plus fiable pour découper les données
+            String[] parts = row.split("\\|", -1); // -1 pour garder les chaînes vides
             
-            // Ajouter la ligne au modèle de table
-            tableModel.addRow(parts);
+            // S'assurer que nous avons le bon nombre de colonnes
+            if (parts.length == 6) {
+                tableModel.addRow(parts);
+            }
         }
     }
 } 

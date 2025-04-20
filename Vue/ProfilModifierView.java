@@ -88,8 +88,8 @@ public class ProfilModifierView extends JFrame {
 
                 if (updated) {
                     JOptionPane.showMessageDialog(this, "Profil mis à jour en base de données !");
-                    new ProfilPage();
                     dispose();
+                    new ProfilPage();
                 } else {
                     JOptionPane.showMessageDialog(this, "Erreur lors de la mise à jour.");
                 }

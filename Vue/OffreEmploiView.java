@@ -4,11 +4,14 @@ import DAO.OffreEmploiDAOImpl;
 import DAO.CandidatureDAOImpl;
 import DAO.CandidatureDAOImpl;
 
+
 import Modele.Annonce;
 import Modele.Candidature;
 import Vue.Components.FooterComponent;
 import Vue.Components.HeaderComponent;
 import Modele.SessionUtilisateur;
+import jakarta.mail.MessagingException;
+import service.EmailService;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -17,6 +20,9 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.List;
+
+import service.Services;
+import jakarta.mail.MessagingException;
 
 public class OffreEmploiView extends JFrame {
     private JTable annoncesTable;
@@ -185,12 +191,15 @@ public class OffreEmploiView extends JFrame {
             return;
         }
 
+        // selection of job
         int selectedRow = annoncesTable.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this,
                     "Veuillez sélectionner une offre à laquelle postuler",
                     "Aucune sélection",
                     JOptionPane.WARNING_MESSAGE);
+            // send email function
+
             return;
         }
 
@@ -240,6 +249,24 @@ public class OffreEmploiView extends JFrame {
                 candidature.setDocuments("lettre_motivation_" + SessionUtilisateur.getInstance().getId() + ".pdf");
 
                 candidatureDAO.ajouterCandidature(candidature);
+
+                try {
+                    String to = SessionUtilisateur.getInstance().getEmail();
+                    String subject = "Candidature enregistrée - MatchaJob";
+                    String body = """
+        <h2>Bonjour %s,</h2>
+        <p>Votre candidature à <strong>%s</strong> a été enregistrée.</p>
+        <p>Nous vous contacterons si votre profil correspond.</p>
+        <p>Merci de votre confiance.</p>
+        """.formatted(
+                            SessionUtilisateur.getInstance().getPrenom(),
+                            annonce.getTitre()
+                    );
+
+                    Services.EMAIL.send(to, subject, body);
+                } catch (MessagingException e) {
+                    e.printStackTrace();
+                }
 
                 JOptionPane.showMessageDialog(this,
                         "Votre candidature a été envoyée avec succès!",

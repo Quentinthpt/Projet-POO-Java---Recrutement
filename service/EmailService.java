@@ -20,6 +20,7 @@ public class EmailService {
         props.put("mail.smtp.host", host);
         props.put("mail.smtp.port", String.valueOf(port));
 
+
         // Authentification
         session = Session.getInstance(props,
                 new Authenticator() {

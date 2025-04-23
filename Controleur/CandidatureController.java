@@ -18,7 +18,7 @@ public class CandidatureController {
         this.offreDAO = offreDAO;
     }
 
-    public boolean créerCandidature(Candidature candidature) {
+    public boolean crÃerCandidature(Candidature candidature) {
         return false;
     }
 
@@ -29,5 +29,6 @@ public class CandidatureController {
     public List<Candidature> consulterCandidatures(Map<String, String> filtres) {
         return null;
     }
+
 }
 

@@ -1,14 +1,19 @@
 package Vue;
 
 import DAO.CandidatureDAOImpl;
-import Modele.Candidature;
 import Modele.SessionUtilisateur;
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class CandidatureView extends JFrame {
+    private JTable table;
+    private CandidatureDAOImpl candidatureDAO = new CandidatureDAOImpl();
+    private String[] colonne = {"Titre", "Description", "Salaire", "Lieu",
+            "Type de contrat", "Expérience requise", "Date début", "Statut"};
+    private JButton supprimerBtn;
+
+
     public CandidatureView() {
         setTitle("Mes Candidatures - MatchaJob");
         setSize(1200, 800);
@@ -32,6 +37,7 @@ public class CandidatureView extends JFrame {
         header.setBorder(BorderFactory.createEmptyBorder(0,0,20,0));
         //header.setPreferredSize(new Dimension(1000, 60));
 
+/*
         SessionUtilisateur session = SessionUtilisateur.getInstance();
         CandidatureDAOImpl candidatureDAO = new CandidatureDAOImpl();
 
@@ -39,20 +45,7 @@ public class CandidatureView extends JFrame {
         String[][] data = lignes.toArray(new String[0][]);
         String[] colonne = {"Titre", "Description", "Salaire", "Lieu",
                 "Type de contrat", "Expérience requise", "Date début", "Statut"};
-/*
-        for (int i = 0; i < candidatures.size(); i++) {
-            Candidature candidature = candidatures.get(i);
-            data[i][0] = String.valueOf(candidature.getIdAnnonce());
-            data[i][1] = String.valueOf(candidature.getIdDemandeur());
-            data[i][2] = candidature.getDateCandidature().toString();
-            data[i][3] = candidature.getStatut();
-            data[i][4] = String.valueOf(candidature.getNote());
-            data[i][5] = candidature.getDocuments();
-        }
 
-
-        //String[] cols = {"ID Annonce" , "ID Demandeur", "Date Candidature", "Statut", "Note", "Documents"};
-*/
         JTable table = new JTable(data, colonne){
             @Override
             public boolean isCellEditable(int row, int colonne) {
@@ -60,21 +53,12 @@ public class CandidatureView extends JFrame {
             }
         };
 
-/*
-        // Tableau des candidatures (à remplacer par des données réelles)
-        String[][] data = {
-                {"1", "Développeur Web", "En cours", "01/04/2025"},
-                {"2", "Chargé de projet", "Accepté", "03/04/2025"}
-        };
-        String[] cols = {"ID", "Poste", "Statut", "Date"};
+ */
+        table = new JTable();
+        table.setRowSelectionAllowed(true);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        loadTableData();
 
-        JTable table = new JTable(data, cols) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
-*/
         // Style du tableau
         table.setFont(new Font("SansSerif", Font.PLAIN, 14));
         table.setRowHeight(30);
@@ -85,13 +69,19 @@ public class CandidatureView extends JFrame {
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
 
+        table.getSelectionModel().addListSelectionListener(e -> {
+            boolean isRowSelected = table.getSelectedRow() != -1;
+            supprimerBtn.setEnabled(isRowSelected);
+        });
+
         // Boutons
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
 
-        JButton detailsBtn = new JButton("Voir Statut");
-        detailsBtn.setBackground(bleuClair);
-        detailsBtn.setForeground(blanc);
-        detailsBtn.addActionListener(e -> voirDetailsCandidature(table));
+        supprimerBtn = new JButton("Supprimer");
+        supprimerBtn.setEnabled(false);
+        supprimerBtn.setBackground(bleuClair);
+        supprimerBtn.setForeground(blanc);
+        supprimerBtn.addActionListener(e -> supprimerCandidature());
 
         JButton retourBtn = new JButton("Retour");
         retourBtn.setBackground(bleuFonce);
@@ -101,7 +91,7 @@ public class CandidatureView extends JFrame {
             new MainPage();
         });
 
-        buttonPanel.add(detailsBtn);
+        buttonPanel.add(supprimerBtn);
         buttonPanel.add(retourBtn);
 
         // Assemblage
@@ -113,44 +103,58 @@ public class CandidatureView extends JFrame {
         setVisible(true);
     }
 
-    private void voirDetailsCandidature(JTable table) {
-        // À implémenter : affichage des détails de la candidature sélectionnée
-        /*
-        JOptionPane.showMessageDialog(this,
-                "Fonctionnalité de détails à implémenter",
-                "Information",
-                JOptionPane.INFORMATION_MESSAGE);*/
+    private void loadTableData() {
+        List<String[]> lignes = candidatureDAO.getInfosAnnoncesCandidature(SessionUtilisateur.getInstance().getId());
+        String[][] data = lignes.toArray(new String[0][]);
 
+        table.setModel(new javax.swing.table.DefaultTableModel(data, colonne) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        });
+    }
+
+    private void supprimerCandidature() {
         int selectedRow = table.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this,
-                    "Veuillez sélectionner une candidature",
+                    "Veuillez sélectionner une candidature!",
                     "Aucune sélection",
                     JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        String titre = table.getValueAt(selectedRow, 0).toString();
-        String statut = table.getValueAt(selectedRow, 7).toString();
-        /*
-        String Titre = table.getValueAt(selectedRow, 0).toString();
-        String Description = table.getValueAt(selectedRow, 1).toString();
-        String Salaire = table.getValueAt(selectedRow, 2).toString();
-        String Lieu = table.getValueAt(selectedRow, 3).toString();
-        String Type_de_Contrat = table.getValueAt(selectedRow, 4).toString();
-        String Experience = table.getValueAt(selectedRow, 5).toString();
-        String Date = table.getValueAt(selectedRow, 6).toString();
-        */
 
+        int confirmation = JOptionPane.showConfirmDialog(this,
+                "Voulez-vous vraiement supprimer cette candidature ?",
+                "Confirmation",
+                JOptionPane.YES_NO_OPTION);
 
-        String message = String.format(
-                "Candidature pour l'offre: %s:\n\n" +
-                        "Statut: %s",
-                titre, statut);
+        if (confirmation == JOptionPane.YES_OPTION) {
+            try {
+                String titre = table.getValueAt(selectedRow, 0).toString();
+                int idDemandeur = SessionUtilisateur.getInstance().getId();
+                int idAnnonce = candidatureDAO.getIdAnnonceFromTitre(titre);
+                boolean success = candidatureDAO.deleteCandidature(idAnnonce, idDemandeur);
+                if (success){
+                    JOptionPane.showMessageDialog(this, "Candidature supprimée avec succès !",
+                            "Succès",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    loadTableData();
+                }
+                else {
+                    JOptionPane.showMessageDialog(this, "Erreur lors de la suppression.",
+                            "Erreur",
+                            JOptionPane.ERROR_MESSAGE);
+                }
 
-        JOptionPane.showMessageDialog(this,
-                message,
-                "Détails de la candidature",
-                JOptionPane.INFORMATION_MESSAGE);
+            }catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Erreur technique : " + ex.getMessage());
+            }
+        }
     }
+
+
 }

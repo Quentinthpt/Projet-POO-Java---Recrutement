@@ -361,4 +361,46 @@ public class CandidatureDAOImpl {
 
         return false;
     }
+
+    // À ajouter si ce n'est pas déjà présent
+    public int getIdAnnonceFromTitre(String titre) throws SQLException {
+        String sql = "SELECT id_annonce FROM annonce WHERE titre_annonce = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, titre);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("id_annonce");
+            }
+        }
+        throw new SQLException("Annonce introuvable pour le titre : " + titre);
+    }
+
+
+    public Candidature getCandidatureByAnnonceId(int idAnnonce) throws SQLException {
+        Candidature candidature = null;
+        try (Connection conn = getConnection()){
+            String sql = "SELECT * FROM candidature WHERE id_annonce = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, idAnnonce);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                // Créer un objet Candidature et peupler ses attributs à partir des résultats de la requête
+                candidature = new Candidature();
+                candidature.setIdAnnonce(rs.getInt("id_annonce"));
+                candidature.setIdDemandeur(rs.getInt("id_demandeurs"));
+                candidature.setDateCandidature(rs.getDate("date_candidature"));
+                candidature.setStatut(rs.getString("statut_candidature"));
+                candidature.setNote(rs.getInt("note_candidature"));
+                candidature.setDocuments(rs.getString("documents_candidature"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return candidature;
+    }
+
+
 }

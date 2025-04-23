@@ -17,4 +17,5 @@ public interface CandidatureDAO {
     public List<Candidature> getAllCandidatures() throws SQLException;
     public boolean deleteCandidature(int idAnnonce, int idDemandeurs) throws SQLException;
     public boolean existeCandidature(int idDemandeur, int idAnnonce) throws SQLException;
+    public int getIdAnnonceFromTitre(String titre) throws SQLException;
 }

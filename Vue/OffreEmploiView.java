@@ -106,6 +106,9 @@ public class OffreEmploiView extends JFrame {
             buttonPanel.add(postulerButton);
         }
 
+        JButton descriptionButton = createStyledButton("Voir Description", Color.DARK_GRAY, e -> afficherDescriptionOffre());
+        buttonPanel.add(descriptionButton);
+
         JButton refreshButton = createStyledButton("Actualiser", bleuFonce, e -> loadAnnonces());
         buttonPanel.add(refreshButton);
 
@@ -172,6 +175,51 @@ public class OffreEmploiView extends JFrame {
 
     private String formatDescription(String description) {
         return description.length() > 50 ? description.substring(0, 47) + "..." : description;
+    }
+
+    private void afficherDescriptionOffre() {
+        int selectedRow = annoncesTable.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this,
+                    "Veuillez sélectionner une offre pour voir sa description.",
+                    "Aucune sélection",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String titre = (String) tableModel.getValueAt(selectedRow, 0);
+
+        try {
+            OffreEmploiDAOImpl dao = new OffreEmploiDAOImpl();
+            Annonce annonce = dao.getAnnonceByTitre(titre);
+
+            if (annonce != null) {
+                String description = annonce.getDescription();
+                JTextArea textArea = new JTextArea(description);
+                textArea.setWrapStyleWord(true);
+                textArea.setLineWrap(true);
+                textArea.setEditable(false);
+                textArea.setBackground(new Color(245, 245, 245));
+                textArea.setFont(new Font("SansSerif", Font.PLAIN, 14));
+
+                JScrollPane scrollPane = new JScrollPane(textArea);
+                scrollPane.setPreferredSize(new Dimension(500, 300));
+
+                JOptionPane.showMessageDialog(this, scrollPane, "Description de l'offre", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "Offre introuvable.",
+                        "Erreur",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Erreur lors de la récupération de l'offre: " + e.getMessage(),
+                    "Erreur",
+                    JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
     }
 
     private void postulerAction() {

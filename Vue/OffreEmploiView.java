@@ -13,6 +13,7 @@ import Modele.SessionUtilisateur;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
@@ -55,9 +56,61 @@ public class OffreEmploiView extends JFrame {
         initializeTableModel();
         configureTableAppearance(bleuFonce, bleuClair);
 
+        // Tri + Recherche
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(tableModel);
+        annoncesTable.setRowSorter(sorter);
+
+        // Comparateur pour le salaire
+        sorter.setComparator(2, (s1, s2) -> {
+            int val1 = Integer.parseInt(s1.toString().replaceAll("[^\\d]", ""));
+            int val2 = Integer.parseInt(s2.toString().replaceAll("[^\\d]", ""));
+            return Integer.compare(val1, val2);
+        });
+
+        // Barre de recherche
+        JPanel searchPanel = new JPanel(new BorderLayout(10, 10));
+        JLabel searchLabel = new JLabel("🔍 Rechercher :");
+        searchLabel.setFont(new Font("SansSerif", Font.BOLD, 14));
+        JTextField searchField = new JTextField();
+        searchField.setFont(new Font("SansSerif", Font.PLAIN, 14));
+
+
+        // Action sur la recherche
+        searchField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                filterTable();
+            }
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                filterTable();
+            }
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                filterTable();
+            }
+
+            private void filterTable() {
+                String text = searchField.getText();
+                if (text.trim().length() == 0) {
+                    sorter.setRowFilter(null);
+                } else {
+                    sorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
+                }
+            }
+        });
+
+        searchPanel.setBorder(new EmptyBorder(10, 0, 10, 0));
+        searchPanel.add(searchLabel, BorderLayout.WEST);
+        searchPanel.add(searchField, BorderLayout.CENTER);
+
+        // Table + recherche
+        JPanel centerPanel = new JPanel(new BorderLayout());
+        centerPanel.add(searchPanel, BorderLayout.NORTH);
+        centerPanel.add(new JScrollPane(annoncesTable), BorderLayout.CENTER);
+
+
         JPanel buttonPanel = createButtonPanel(bleuFonce, bleuClair);
 
-        contentPanel.add(new JScrollPane(annoncesTable), BorderLayout.CENTER);
+        //contentPanel.add(new JScrollPane(annoncesTable), BorderLayout.CENTER);
+        contentPanel.add(centerPanel, BorderLayout.CENTER);
         contentPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         loadAnnonces();
@@ -77,6 +130,8 @@ public class OffreEmploiView extends JFrame {
             }
         };
         annoncesTable = new JTable(tableModel);
+        //TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(tableModel);
+        //annoncesTable.setRowSorter(sorter);
     }
 
     private void configureTableAppearance(Color bleuFonce, Color bleuClair) {

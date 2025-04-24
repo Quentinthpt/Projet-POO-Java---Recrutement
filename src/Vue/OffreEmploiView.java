@@ -2,17 +2,14 @@ package Vue;
 
 import DAO.OffreEmploiDAOImpl;
 import DAO.CandidatureDAOImpl;
-import DAO.CandidatureDAOImpl;
-
-
 import Modele.Annonce;
 import Modele.Candidature;
+import Modele.SessionUtilisateur;
 import Vue.Components.FooterComponent;
 import Vue.Components.HeaderComponent;
-import Modele.SessionUtilisateur;
-import jakarta.mail.MessagingException;
-import service.EmailService;
+import service.Services;
 
+import jakarta.mail.MessagingException;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
@@ -22,9 +19,7 @@ import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.List;
 
-import service.Services;
-import jakarta.mail.MessagingException;
-
+//création de la page OffreEmploi
 public class OffreEmploiView extends JFrame {
     private JTable annoncesTable;
     private DefaultTableModel tableModel;
@@ -50,6 +45,7 @@ public class OffreEmploiView extends JFrame {
         setVisible(true);
     }
 
+    //création du bloc central avec toutes les offres
     private JPanel createContentPanel(Color bleuFonce, Color bleuClair) {
         JPanel contentPanel = new JPanel(new BorderLayout());
         contentPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
@@ -60,20 +56,20 @@ public class OffreEmploiView extends JFrame {
         contentPanel.add(titre, BorderLayout.NORTH);
 
         initializeTableModel();
-        configureTableAppearance(bleuFonce, bleuClair);
+        configureTableAppearance(bleuClair);
 
-        // Tri + Recherche
+        //tri par ordre croissant ou décroissant lorsqu'on clique sur le nom de notre colonne
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(tableModel);
         annoncesTable.setRowSorter(sorter);
 
-        // Comparateur pour le salaire
+        //comparateur pour le salaire
         sorter.setComparator(2, (s1, s2) -> {
             int val1 = Integer.parseInt(s1.toString().replaceAll("[^\\d]", ""));
             int val2 = Integer.parseInt(s2.toString().replaceAll("[^\\d]", ""));
             return Integer.compare(val1, val2);
         });
 
-        // Barre de recherche
+        //ajout d'une barre de recherche
         JPanel searchPanel = new JPanel(new BorderLayout(10, 10));
         JLabel searchLabel = new JLabel("🔍 Rechercher :");
         searchLabel.setFont(new Font("SansSerif", Font.BOLD, 14));
@@ -81,7 +77,8 @@ public class OffreEmploiView extends JFrame {
         searchField.setFont(new Font("SansSerif", Font.PLAIN, 14));
 
 
-        // Action sur la recherche
+        //comparer ce que l'utilisateur a tapé par rapport à toutes les informations des offres (toutes les colonnes
+        //+ toutes les lignes
         searchField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
             public void insertUpdate(javax.swing.event.DocumentEvent e) {
                 filterTable();
@@ -107,15 +104,12 @@ public class OffreEmploiView extends JFrame {
         searchPanel.add(searchLabel, BorderLayout.WEST);
         searchPanel.add(searchField, BorderLayout.CENTER);
 
-        // Table + recherche
         JPanel centerPanel = new JPanel(new BorderLayout());
         centerPanel.add(searchPanel, BorderLayout.NORTH);
         centerPanel.add(new JScrollPane(annoncesTable), BorderLayout.CENTER);
 
-
         JPanel buttonPanel = createButtonPanel(bleuFonce, bleuClair);
 
-        //contentPanel.add(new JScrollPane(annoncesTable), BorderLayout.CENTER);
         contentPanel.add(centerPanel, BorderLayout.CENTER);
         contentPanel.add(buttonPanel, BorderLayout.SOUTH);
 
@@ -124,6 +118,7 @@ public class OffreEmploiView extends JFrame {
         return contentPanel;
     }
 
+    //initialisation du tableau avec les offres d'emploi
     private void initializeTableModel() {
         String[] columnNames = {
                 "Titre", "Description", "Salaire", "Lieu",
@@ -136,11 +131,9 @@ public class OffreEmploiView extends JFrame {
             }
         };
         annoncesTable = new JTable(tableModel);
-        //TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(tableModel);
-        //annoncesTable.setRowSorter(sorter);
     }
 
-    private void configureTableAppearance(Color bleuFonce, Color bleuClair) {
+    private void configureTableAppearance(Color bleuClair) {
         annoncesTable.setRowHeight(30);
         annoncesTable.setFont(new Font("SansSerif", Font.PLAIN, 14));
         annoncesTable.getTableHeader().setFont(new Font("SansSerif", Font.BOLD, 14));
@@ -151,10 +144,11 @@ public class OffreEmploiView extends JFrame {
         annoncesTable.setSelectionForeground(Color.WHITE);
     }
 
+    //générer différents boutons en fonction du type de l'utilisateur
     private JPanel createButtonPanel(Color bleuFonce, Color bleuClair) {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
 
-        // Vérifier si l'utilisateur est un administrateur
+        //vérifier si l'utilisateur est un administrateur
         boolean isAdmin = SessionUtilisateur.getInstance().isAdmin();
 
         if (isAdmin) {
@@ -183,6 +177,7 @@ public class OffreEmploiView extends JFrame {
     private void gererOffresAction() {
         navigateTo(new GestionOffresView());
     }
+
     private JButton createStyledButton(String text, Color bgColor, ActionListener action) {
         JButton button = new JButton(text);
         button.setBackground(bgColor);
@@ -238,6 +233,7 @@ public class OffreEmploiView extends JFrame {
         return description.length() > 50 ? description.substring(0, 47) + "..." : description;
     }
 
+    //afficher le détail de la description de l'offre suite à l'action sur un bouton
     private void afficherDescriptionOffre() {
         int selectedRow = annoncesTable.getSelectedRow();
         if (selectedRow == -1) {
@@ -266,6 +262,7 @@ public class OffreEmploiView extends JFrame {
                 JScrollPane scrollPane = new JScrollPane(textArea);
                 scrollPane.setPreferredSize(new Dimension(500, 300));
 
+                //ouverture d'une fenêtre pop-up
                 JOptionPane.showMessageDialog(this, scrollPane, "Description de l'offre", JOptionPane.INFORMATION_MESSAGE);
             } else {
                 JOptionPane.showMessageDialog(this,
@@ -284,17 +281,17 @@ public class OffreEmploiView extends JFrame {
     }
 
     private void postulerAction() {
-        // Vérification de la connexion de l'utilisateur
+        //vérification de la connexion de l'utilisateur
         if (SessionUtilisateur.getInstance().getEmail() == null) {
             JOptionPane.showMessageDialog(this,
                     "Vous devez être connecté pour postuler. Redirection vers la page de connexion.",
                     "Non connecté",
                     JOptionPane.WARNING_MESSAGE);
+            //redirection sur la page de connexion
             redirectToLoginPage();
             return;
         }
 
-        // selection of job
         int selectedRow = annoncesTable.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this,
@@ -357,13 +354,11 @@ public class OffreEmploiView extends JFrame {
                     String to = SessionUtilisateur.getInstance().getEmail();
                     String subject = "Candidature enregistrée - MatchaJob";
                     String body = """
-        <h2>Bonjour %s,</h2>
-        <p>Votre candidature à <strong>%s</strong> a été enregistrée.</p>
-        <p>Nous vous contacterons si votre profil correspond.</p>
-        <p>Merci de votre confiance.</p>
-        """.formatted(
-                            SessionUtilisateur.getInstance().getPrenom(),
-                            annonce.getTitre()
+                                    <h2>Bonjour %s,</h2>
+                                    <p>Votre candidature à <strong>%s</strong> a été enregistrée.</p>
+                                    <p>Nous vous contacterons si votre profil correspond.</p>
+                                    <p>Merci de votre confiance.</p>
+                                  """.formatted(SessionUtilisateur.getInstance().getPrenom(), annonce.getTitre()
                     );
 
                     Services.EMAIL.send(to, subject, body);

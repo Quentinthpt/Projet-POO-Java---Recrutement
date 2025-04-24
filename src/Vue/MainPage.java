@@ -1,11 +1,13 @@
 package Vue;
 
+//importer les différentes bibliothèques + autre fichier nécessaire
 import Vue.Components.FooterComponent;
 import Vue.Components.HeaderComponent;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
+//création de la page d'accueil
 public class MainPage extends JFrame {
     public MainPage() {
         setTitle("MatchaJob - Recrutement");
@@ -13,26 +15,22 @@ public class MainPage extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // Couleurs principales
         Color bleuFonce = new Color(9, 18, 66);
-        Color blanc = Color.WHITE;
 
-        // Panel principal
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(bleuFonce);
 
-        // Ajout des composants
+        //ajout des différents composants: header + page centrale + footer
         mainPanel.add(new HeaderComponent(this), BorderLayout.NORTH);
         mainPanel.add(createContentPanel(), BorderLayout.CENTER);
         mainPanel.add(new FooterComponent(), BorderLayout.SOUTH);
 
-        // Configuration du défilement
+        //création + initialisation de la barre pour défiler
         JScrollPane scrollPane = new JScrollPane(mainPanel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
 
-        // Style de la barre de défilement
         JScrollBar verticalScrollBar = scrollPane.getVerticalScrollBar();
         verticalScrollBar.setBackground(Color.WHITE);
         verticalScrollBar.setForeground(new Color(45, 132, 255));
@@ -43,12 +41,14 @@ public class MainPage extends JFrame {
         setVisible(true);
     }
 
+    //redimensionner nos images
     private ImageIcon resizeImage(ImageIcon icon, int width, int height) {
         Image img = icon.getImage();
         Image resizedImage = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
         return new ImageIcon(resizedImage);
     }
 
+    //création du bloc principal / central de notre page
     private JPanel createContentPanel() {
         Color bleuFonce = new Color(9, 18, 66);
         Color blanc = Color.WHITE;
@@ -57,11 +57,12 @@ public class MainPage extends JFrame {
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
         contentPanel.setBackground(bleuFonce);
 
+        //création sous forme de tableau avec différentes "cases"
         JPanel corps_de_la_page = new JPanel(new GridLayout(2, 2, 15, 10));
         corps_de_la_page.setBackground(bleuFonce);
         corps_de_la_page.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        // Dimensions communes pour les images
+        //dimensions de nos images
         int imageWidth = 400;
         int imageHeight = 300;
 
@@ -108,8 +109,6 @@ public class MainPage extends JFrame {
 
         contentPanel.add(corps_de_la_page);
         contentPanel.add(Box.createVerticalStrut(20));
-
-
 
         return contentPanel;
     }

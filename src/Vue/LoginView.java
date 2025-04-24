@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.sql.SQLException;
 
+//Ici, page pour la connexion + inscription
 public class LoginView extends JFrame {
     private final CardLayout cardLayout = new CardLayout();
     private final JPanel mainPanel = new JPanel(cardLayout);
@@ -31,86 +32,93 @@ public class LoginView extends JFrame {
     private void initUI(String mode) {
         JPanel container = new JPanel(new BorderLayout());
 
-        // Header
+        //ajout du header
         container.add(new HeaderComponent(this), BorderLayout.NORTH);
 
-        // Contenu principal avec padding
         JPanel contentContainer = new JPanel(new BorderLayout());
-        contentContainer.setBorder(BorderFactory.createEmptyBorder(50, 100, 50, 100)); // Grands marges
+        contentContainer.setBorder(BorderFactory.createEmptyBorder(50, 100, 50, 100));
         contentContainer.setBackground(Color.WHITE);
 
+        //bandeau déroulant, avec les termes connexion et inscription qui renvoient vers leur fonction respective
         mainPanel.add(createLoginPanel(), "connexion");
         mainPanel.add(createRegisterPanel(), "inscription");
         contentContainer.add(mainPanel, BorderLayout.CENTER);
 
         container.add(contentContainer, BorderLayout.CENTER);
 
-        // Footer
+        //ajout du footer
         container.add(new FooterComponent(), BorderLayout.SOUTH);
 
         add(container);
         cardLayout.show(mainPanel, mode.toLowerCase());
     }
 
+    //page de connexion
     private JPanel createLoginPanel() {
+        //mise en page de la page connexion
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setBackground(Color.WHITE);
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10); // Espacement augmenté
+        gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.weightx = 1.0;
 
-        // Style
+        //style de notre page
         Color bleuFonce = new Color(9, 18, 66);
         Color bleuClair = new Color(45, 132, 255);
 
-        // Titre
+        //style autour du titre
         JLabel titleLabel = new JLabel("CONNEXION", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 32)); // Taille augmentée
+        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 32));
         titleLabel.setForeground(bleuFonce);
         titleLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 30, 0));
 
-        // Champs de formulaire
+        //création des champs du formulaire : une case email + une case mot de passe
         JTextField emailField = new JTextField();
-        emailField.setPreferredSize(new Dimension(300, 40)); // Taille augmentée
+        emailField.setPreferredSize(new Dimension(300, 40));
         emailField.setFont(new Font("SansSerif", Font.PLAIN, 18));
 
         JPasswordField passwordField = new JPasswordField();
         passwordField.setPreferredSize(new Dimension(300, 40));
         passwordField.setFont(new Font("SansSerif", Font.PLAIN, 18));
 
-        // Boutons
+        //création des trois boutons : se connecter / créer un compte / retour
         JButton loginButton = createStyledButton("SE CONNECTER", bleuClair, 200, 40);
         JButton switchButton = createStyledButton("CRÉER UN COMPTE", new Color(180, 180, 180), 200, 40);
         JButton homeButton = createStyledButton("RETOUR À L'ACCUEIL", bleuFonce, 200, 40);
 
-        // Positionnement
+        //positionnement de nos "briques"
+        //pour le titre:
         gbc.gridwidth = 2;
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.CENTER;
         panel.add(titleLabel, gbc);
 
+        //pour l'email
         gbc.gridwidth = 1;
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.anchor = GridBagConstraints.LINE_END;
+        //case affichage texte:
         panel.add(createFormLabel("Email:"), gbc);
 
+        //case pour remplir:
         gbc.gridx = 1;
-        //gbc.gridy = 1;
         gbc.anchor = GridBagConstraints.LINE_START;
         panel.add(emailField, gbc);
 
+        //case affichage texte:
         gbc.gridx = 0;
         gbc.gridy = 2;
         gbc.anchor = GridBagConstraints.LINE_END;
         panel.add(createFormLabel("Mot de passe:"), gbc);
 
+        //case pour remplir:
         gbc.gridx = 1;
-        //gbc.gridy = 2;
         panel.add(passwordField, gbc);
 
+        //affichage boutons
         gbc.gridwidth = 1;
         gbc.gridx = 1;
         gbc.gridy = 3;
@@ -123,7 +131,8 @@ public class LoginView extends JFrame {
         gbc.gridy = 5;
         panel.add(homeButton, gbc);
 
-        // Listeners
+
+        //action des boutons + redirection (page d'accueil ou inscription ou page connecté)
         loginButton.addActionListener(e -> handleLogin(
                 emailField.getText(),
                 new String(passwordField.getPassword())
@@ -135,6 +144,7 @@ public class LoginView extends JFrame {
         return panel;
     }
 
+    //création de la page d'inscription
     private JScrollPane createRegisterPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setBackground(Color.WHITE);
@@ -142,17 +152,17 @@ public class LoginView extends JFrame {
         gbc.insets = new Insets(15, 15, 15, 15);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Style
+        //style de la page
         Color bleuFonce = new Color(9, 18, 66);
         Color bleuClair = new Color(45, 132, 255);
 
-        // Titre
+        //titre
         JLabel titleLabel = new JLabel("INSCRIPTION DEMANDEUR", SwingConstants.CENTER);
         titleLabel.setFont(new Font("SansSerif", Font.BOLD, 32));
         titleLabel.setForeground(bleuFonce);
         titleLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 30, 0));
 
-        // Champs de formulaire
+        //création des champs pour la page d'inscription
         JTextField[] fields = new JTextField[7];
         for (int i = 0; i < fields.length; i++) {
             fields[i] = new JTextField();
@@ -164,12 +174,12 @@ public class LoginView extends JFrame {
         passwordField.setPreferredSize(new Dimension(300, 40));
         passwordField.setFont(new Font("SansSerif", Font.PLAIN, 18));
 
-        // Boutons
+        //différents boutons
         JButton registerButton = createStyledButton("S'INSCRIRE", bleuClair, 200, 40);
         JButton switchButton = createStyledButton("DÉJÀ UN COMPTE ?", new Color(180, 180, 180), 200, 40);
         JButton homeButton = createStyledButton("RETOUR À L'ACCUEIL", bleuFonce, 200, 40);
 
-        // Positionnement
+        //positionnement des cases
         gbc.gridwidth = 2;
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -191,6 +201,7 @@ public class LoginView extends JFrame {
             }
         }
 
+        //positionnement des boutons
         gbc.gridwidth = 2;
         gbc.gridx = 0;
         gbc.gridy = labels.length + 1;
@@ -202,12 +213,13 @@ public class LoginView extends JFrame {
         gbc.gridy = labels.length + 3;
         panel.add(homeButton, gbc);
 
-        // Listeners
+        //redirection + action des boutons
         registerButton.addActionListener(e -> handleRegistration(fields, passwordField));
         switchButton.addActionListener(e -> cardLayout.show(mainPanel, "connexion"));
         homeButton.addActionListener(e -> returnToHome());
 
 
+        //ajout d'une barre afin de "scroller" sur la page d'inscription
         JScrollPane scrollPane = new JScrollPane(panel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -220,7 +232,6 @@ public class LoginView extends JFrame {
         verticalScrollBar.setPreferredSize(new Dimension(10, 0));
 
         return scrollPane;
-        //return panel;
     }
 
     private JLabel createFormLabel(String text) {
@@ -240,6 +251,9 @@ public class LoginView extends JFrame {
         return button;
     }
 
+    //vérification dans la bdd que email + mot de passe sont corrects
+    //si oui, redirection
+    //si non, messsage d'erreur
     private void handleLogin(String email, String password) {
         try {
             Utilisateur user = utilisateurDAO.connecter(email, password);
@@ -272,11 +286,13 @@ public class LoginView extends JFrame {
         session.setRole(user.getType());
     }
 
+    //redirection vers MainPage(), après la vérif de la connexion
     private void redirectAfterLogin(Utilisateur user) {
         dispose();
         new MainPage();
     }
 
+    //ajout des champs de l'inscription dans la bdd
     private void handleRegistration(JTextField[] fields, JPasswordField passwordField) {
         try {
             Utilisateur newUser = new Utilisateur(
@@ -291,11 +307,13 @@ public class LoginView extends JFrame {
                     "Demandeur"
             );
 
+            //message si inscription réussie + redirection vers connexion
             if (utilisateurDAO.inscrireDemandeur(newUser)) {
                 JOptionPane.showMessageDialog(this, "Inscription réussie !");
                 cardLayout.show(mainPanel, "connexion");
             }
         } catch (NumberFormatException e) {
+            //condition sur l'âge
             JOptionPane.showMessageDialog(this,
                     "L'âge doit être un nombre valide",
                     "Erreur",

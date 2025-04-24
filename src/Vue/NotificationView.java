@@ -1,6 +1,6 @@
 package Vue;
 
-import DAO.NotificationDAO;
+//importer les bibliothèques + fichiers
 import DAO.NotificationDAOImpl;
 import Modele.Notification;
 import Modele.SessionUtilisateur;
@@ -9,8 +9,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
+//création de la page de notification
 public class NotificationView extends JFrame {
     public NotificationView() {
+        //nouvelle dimension pour cette page
         setTitle("Mes notifications");
         setSize(600, 400);
         setLocationRelativeTo(null);
@@ -28,7 +30,7 @@ public class NotificationView extends JFrame {
         title.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
         panel.add(title, BorderLayout.NORTH);
 
-        // Récupération des notifications non lues
+        //récupération des notifications non lues dans la bdd
         NotificationDAOImpl dao = new NotificationDAOImpl();
         List<Notification> notifications = dao.getNotificationsNonLues(SessionUtilisateur.getInstance().getId());
 
@@ -45,7 +47,7 @@ public class NotificationView extends JFrame {
 
         panel.add(scrollPane, BorderLayout.CENTER);
 
-        // Marquer comme lues
+        //marquer les notifications comme lues
         dao.marquerNotificationsCommeLues(SessionUtilisateur.getInstance().getId());
 
         add(panel);

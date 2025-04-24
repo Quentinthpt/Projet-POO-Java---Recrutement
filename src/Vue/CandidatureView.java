@@ -6,18 +6,23 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
+
+//page de Candidature
 public class CandidatureView extends JFrame {
+    //variable globale pour cette classe:
     private JTable table;
     private CandidatureDAOImpl candidatureDAO = new CandidatureDAOImpl();
+    //les différentes inforamtions de la candidature --> voir bdd
     private String[] colonne = {"Titre", "Description", "Salaire", "Lieu",
             "Type de contrat", "Expérience requise", "Date début", "Statut"};
     private JButton supprimerBtn;
 
 
     public CandidatureView() {
+        //on initialise la page : dimension, couleur, etc...
         setTitle("Mes Candidatures - MatchaJob");
         setSize(1200, 800);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Changé pour ne pas quitter l'application
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 
         Color bleuFonce = new Color(9, 18, 66);
@@ -28,38 +33,21 @@ public class CandidatureView extends JFrame {
         mainPanel.setBackground(bleuFonce);
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        // Header
+        //paramètre du header
         JLabel header = new JLabel("Mes Candidatures", SwingConstants.CENTER);
         header.setForeground(blanc);
         header.setFont(new Font("SansSerif", Font.BOLD, 24));
         header.setOpaque(true);
         header.setBackground(bleuFonce);
         header.setBorder(BorderFactory.createEmptyBorder(0,0,20,0));
-        //header.setPreferredSize(new Dimension(1000, 60));
 
-/*
-        SessionUtilisateur session = SessionUtilisateur.getInstance();
-        CandidatureDAOImpl candidatureDAO = new CandidatureDAOImpl();
 
-        List<String[]> lignes = candidatureDAO.getInfosAnnoncesCandidature(session.getId());
-        String[][] data = lignes.toArray(new String[0][]);
-        String[] colonne = {"Titre", "Description", "Salaire", "Lieu",
-                "Type de contrat", "Expérience requise", "Date début", "Statut"};
-
-        JTable table = new JTable(data, colonne){
-            @Override
-            public boolean isCellEditable(int row, int colonne) {
-                return false;
-            }
-        };
-
- */
         table = new JTable();
         table.setRowSelectionAllowed(true);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         loadTableData();
 
-        // Style du tableau
+        //style du tableau
         table.setFont(new Font("SansSerif", Font.PLAIN, 14));
         table.setRowHeight(30);
         table.getTableHeader().setFont(new Font("SansSerif", Font.BOLD, 14));
@@ -74,7 +62,7 @@ public class CandidatureView extends JFrame {
             supprimerBtn.setEnabled(isRowSelected);
         });
 
-        // Boutons
+        //création de nos boutons
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
 
         supprimerBtn = new JButton("Supprimer");
@@ -94,7 +82,7 @@ public class CandidatureView extends JFrame {
         buttonPanel.add(supprimerBtn);
         buttonPanel.add(retourBtn);
 
-        // Assemblage
+        //assemblage de notre page Candidature
         mainPanel.add(header, BorderLayout.NORTH);
         mainPanel.add(scrollPane, BorderLayout.CENTER);
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
@@ -103,6 +91,7 @@ public class CandidatureView extends JFrame {
         setVisible(true);
     }
 
+    //permet de récupérer les valeurs demandées pour notre tableau
     private void loadTableData() {
         List<String[]> lignes = candidatureDAO.getInfosAnnoncesCandidature(SessionUtilisateur.getInstance().getId());
         String[][] data = lignes.toArray(new String[0][]);
@@ -115,8 +104,11 @@ public class CandidatureView extends JFrame {
         });
     }
 
+    //fonction pour supprimer une candidature (accessible lorsqu'on clique sur le bouton supprimer)
     private void supprimerCandidature() {
         int selectedRow = table.getSelectedRow();
+
+        //condition pour supprimer une candidature
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this,
                     "Veuillez sélectionner une candidature!",
@@ -125,12 +117,13 @@ public class CandidatureView extends JFrame {
             return;
         }
 
-
+        //message de confirmation pour l'action
         int confirmation = JOptionPane.showConfirmDialog(this,
                 "Voulez-vous vraiement supprimer cette candidature ?",
                 "Confirmation",
                 JOptionPane.YES_NO_OPTION);
 
+        //permet de supprimer la candidature sur la page mais aussi dans la bdd
         if (confirmation == JOptionPane.YES_OPTION) {
             try {
                 String titre = table.getValueAt(selectedRow, 0).toString();

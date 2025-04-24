@@ -99,10 +99,12 @@ public class ListeUtilisateursView extends JFrame {
         JButton refreshButton = createStyledButton("Actualiser", bleuFonce, e -> loadUtilisateurs());
         JButton supprimerButton = createStyledButton("Supprimer", new Color(200, 50, 50), e -> supprimerUtilisateur());
         //JButton modifierStatutButton = createStyledButton("Modifier le statut", new Color(50, 150, 50), e -> modifierStatutDemandeur());
+        JButton voirCvButton = createStyledButton("Voir CV", bleuClair, e -> voirCVUtilisateur());
 
         buttonPanel.add(refreshButton);
         buttonPanel.add(supprimerButton);
         //buttonPanel.add(modifierStatutButton);
+        buttonPanel.add(voirCvButton);
 
         return buttonPanel;
     }
@@ -226,6 +228,53 @@ public class ListeUtilisateursView extends JFrame {
             }
         }
     }
+
+    private void voirCVUtilisateur() {
+        int selectedRow = utilisateursTable.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this,
+                    "Veuillez sélectionner un utilisateur pour voir son CV.",
+                    "Aucune sélection",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String type = (String) tableModel.getValueAt(selectedRow, 0);
+        if (!"Demandeur".equalsIgnoreCase(type)) {
+            JOptionPane.showMessageDialog(this,
+                    "Seuls les demandeurs ont des CV associés.",
+                    "Type invalide",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String nomFichierCV = (String) tableModel.getValueAt(selectedRow, 7); // Colonne "CV"
+        if (nomFichierCV == null || nomFichierCV.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "Aucun fichier CV enregistré pour cet utilisateur.",
+                    "CV manquant",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        java.io.File file = new java.io.File("assets/cv/" + nomFichierCV);
+        if (file.exists()) {
+            try {
+                Desktop.getDesktop().open(file);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this,
+                        "Impossible d'ouvrir le fichier : " + e.getMessage(),
+                        "Erreur",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    "Fichier CV introuvable : " + file.getAbsolutePath(),
+                    "Fichier manquant",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
 
     private void modifierStatutDemandeur() {
         int selectedRow = utilisateursTable.getSelectedRow();

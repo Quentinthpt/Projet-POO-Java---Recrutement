@@ -8,6 +8,12 @@ import Vue.Components.HeaderComponent;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 
 //Ici, page pour la connexion + inscription
@@ -15,6 +21,7 @@ public class LoginView extends JFrame {
     private final CardLayout cardLayout = new CardLayout();
     private final JPanel mainPanel = new JPanel(cardLayout);
     private final UtilisateurDAOImpl utilisateurDAO = new UtilisateurDAOImpl();
+    private File cvFichier = null;
 
     public LoginView(String mode) {
         configureFrame();
@@ -194,11 +201,36 @@ public class LoginView extends JFrame {
             panel.add(createFormLabel(labels[i]), gbc);
 
             gbc.gridx = 1;
+            if (i == 6) {
+                JPanel filePanel = new JPanel(new BorderLayout(5, 5));
+                JButton browseBtn = new JButton("Choisir un fichier...");
+                JLabel fileLabel = new JLabel("Aucun fichier");
+
+                browseBtn.addActionListener(e -> {
+                    JFileChooser chooser = new JFileChooser();
+                    int res = chooser.showOpenDialog(this);
+                    if (res == JFileChooser.APPROVE_OPTION) {
+                        cvFichier = chooser.getSelectedFile();
+                        fileLabel.setText(cvFichier.getName());
+                    }
+                });
+
+                filePanel.add(browseBtn, BorderLayout.WEST);
+                filePanel.add(fileLabel, BorderLayout.CENTER);
+                panel.add(filePanel, gbc);
+            } else if (i == 7) {
+                panel.add(passwordField, gbc);
+            } else {
+                panel.add(fields[i], gbc);
+            }
+            /*
             if (i == labels.length - 1) {
                 panel.add(passwordField, gbc);
             } else {
                 panel.add(fields[i], gbc);
             }
+
+             */
         }
 
         //positionnement des boutons
@@ -275,7 +307,6 @@ public class LoginView extends JFrame {
     private void initUserSession(Utilisateur user) {
         SessionUtilisateur session = SessionUtilisateur.getInstance();
         session.setId(user.getId());
-        System.out.println(user.getId());
         session.setNom(user.getNom());
         session.setPrenom(user.getPrenom());
         session.setEmail(user.getEmail());
@@ -284,6 +315,7 @@ public class LoginView extends JFrame {
         session.setExperience(user.getExperience());
         session.setCv(user.getCv());
         session.setRole(user.getType());
+        System.out.println("CV récupéré depuis la BDD: " + user.getCv());
     }
 
     //redirection vers MainPage(), après la vérif de la connexion
@@ -295,6 +327,21 @@ public class LoginView extends JFrame {
     //ajout des champs de l'inscription dans la bdd
     private void handleRegistration(JTextField[] fields, JPasswordField passwordField) {
         try {
+            String cvPath = "cv_default.pdf";
+            if (cvFichier != null) {
+                try {
+                    String destDir = "assets/cv/";
+                    new File(destDir).mkdirs();
+                    String filename = cvFichier.getName();
+                    Path destPath = Paths.get(destDir + filename);
+                    Files.copy(cvFichier.toPath(), destPath, StandardCopyOption.REPLACE_EXISTING);
+                    cvPath = destPath.toString();
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(this, "Erreur lors de l'enregistrement du fichier CV.");
+                    return;
+                }
+            }
+
             Utilisateur newUser = new Utilisateur(
                     fields[0].getText(),
                     fields[1].getText(),
@@ -302,7 +349,7 @@ public class LoginView extends JFrame {
                     fields[3].getText(),
                     fields[4].getText(),
                     fields[5].getText(),
-                    fields[6].getText(),
+                    cvPath,
                     new String(passwordField.getPassword()),
                     "Demandeur"
             );

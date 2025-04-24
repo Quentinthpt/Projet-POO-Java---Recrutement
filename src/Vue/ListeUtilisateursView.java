@@ -203,7 +203,6 @@ public class ListeUtilisateursView extends JFrame {
                     success = dao.supprimerAdmin(email);
                 } else {
                     success = dao.supprimerDemandeur(email);
-                    System.out.println(email);
                 }
 
                 if (success) {

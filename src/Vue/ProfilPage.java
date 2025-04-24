@@ -4,6 +4,8 @@ import Modele.SessionUtilisateur;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 
 public class ProfilPage extends JFrame {
     public ProfilPage() {
@@ -21,6 +23,7 @@ public class ProfilPage extends JFrame {
 
         // Récupération des infos de la session
         SessionUtilisateur session = SessionUtilisateur.getInstance();
+        String nomcv = session.getCv();
 
         // Header
         JLabel header = new JLabel("Mon Profil", SwingConstants.CENTER);
@@ -66,6 +69,11 @@ public class ProfilPage extends JFrame {
         modifierBtn.setForeground(blanc);
         modifierBtn.addActionListener(e -> ouvrirModificationProfil());
 
+        JButton voirCvBtn = new JButton("Voir mon CV");
+        voirCvBtn.setBackground(new Color(60, 180, 75)); // vert
+        voirCvBtn.setForeground(blanc);
+        voirCvBtn.addActionListener(e -> ouvrirCV());
+
         JButton retourBtn = new JButton("Retour");
         retourBtn.setBackground(bleuFonce);
         retourBtn.setForeground(blanc);
@@ -75,6 +83,7 @@ public class ProfilPage extends JFrame {
         });
 
         buttonPanel.add(modifierBtn);
+        buttonPanel.add(voirCvBtn);
         buttonPanel.add(retourBtn);
 
         // Assemblage
@@ -90,5 +99,25 @@ public class ProfilPage extends JFrame {
         // À implémenter : ouverture de la vue de modification
         //JOptionPane.showMessageDialog(this,"Fonctionnalité de modification à implémenter","Information", JOptionPane.INFORMATION_MESSAGE);
         new ProfilModifierView();
+    }
+
+    private void ouvrirCV() {
+        String nomFichier = SessionUtilisateur.getInstance().getCv();
+        File fichier = new File("assets/cv/" + nomFichier);
+
+        System.out.println("Tentative d'ouverture du fichier : " + fichier.getAbsolutePath());
+
+        System.out.println("Chemin complet du fichier: assets/cv/" + SessionUtilisateur.getInstance().getCv());
+
+        if (fichier.exists()) {
+            try {
+                Desktop.getDesktop().open(fichier);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Impossible d’ouvrir le fichier.", "Erreur", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Fichier CV introuvable : " + nomFichier, "Erreur", JOptionPane.ERROR_MESSAGE);
+        }
     }
 }

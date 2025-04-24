@@ -15,7 +15,6 @@ public class HeaderComponent extends JPanel {
 
     public HeaderComponent(JFrame parentFrame) {
         // Mise à jour de la référence du frame courant
-        System.out.println(SessionUtilisateur.getInstance().getRole());
         // Couleurs
         Color bleuFonce = new Color(9, 18, 66);
         Color bleuClair = new Color(45, 132, 255);

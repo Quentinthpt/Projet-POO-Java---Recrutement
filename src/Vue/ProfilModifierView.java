@@ -40,7 +40,36 @@ public class ProfilModifierView extends JFrame {
         JTextField adresseField = new JTextField(session.getAdresse());
         JTextField ageField = new JTextField(String.valueOf(session.getAge()));
         JTextField experienceField = new JTextField(session.getExperience());
+        //JTextField cvField = new JTextField(session.getCv());
+
+
         JTextField cvField = new JTextField(session.getCv());
+        cvField.setEditable(false); // on empêche la modification manuelle
+
+        JButton choisirFichierBtn = new JButton("Choisir un fichier");
+        choisirFichierBtn.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser();
+            int result = fileChooser.showOpenDialog(this);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                java.io.File selectedFile = fileChooser.getSelectedFile();
+                try {
+                    // Crée le dossier assets/cv s'il n'existe pas
+                    java.nio.file.Path destDir = java.nio.file.Paths.get("assets/cv");
+                    java.nio.file.Files.createDirectories(destDir);
+
+                    // Copie le fichier dans le dossier
+                    java.nio.file.Path destPath = destDir.resolve(selectedFile.getName());
+                    java.nio.file.Files.copy(selectedFile.toPath(), destPath, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+
+                    cvField.setText(selectedFile.getName()); // Met à jour le champ texte avec le nom du fichier
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Erreur lors de la copie du fichier : " + ex.getMessage());
+                }
+            }
+        });
+
+
+
 
         String[] labels = {"Nom", "Prénom", "Email", "Adresse", "Âge", "Expérience", "CV"};
         JTextField[] fields = {nomField, prenomField, emailField, adresseField, ageField, experienceField, cvField};
@@ -52,7 +81,17 @@ public class ProfilModifierView extends JFrame {
             panel.add(new JLabel(labels[i] + " :"), gbc);
 
             gbc.gridx = 1;
-            panel.add(fields[i], gbc);
+            //panel.add(fields[i], gbc);
+
+            if (i == 6) { // Pour le champ CV
+                JPanel cvPanel = new JPanel(new BorderLayout(5, 0));
+                cvPanel.add(fields[i], BorderLayout.CENTER);
+                cvPanel.add(choisirFichierBtn, BorderLayout.EAST);
+                panel.add(cvPanel, gbc);
+            } else {
+                panel.add(fields[i], gbc);
+            }
+
         }
 
         // Boutons
@@ -81,7 +120,6 @@ public class ProfilModifierView extends JFrame {
                 session.setExperience(experienceField.getText());
                 session.setCv(cvField.getText());
 
-                //System.out.println("ID session: " + session.getId());
 
                 UtilisateurDAOImpl dao = new UtilisateurDAOImpl();
                 boolean updated = dao.mettreAJourProfil(session);

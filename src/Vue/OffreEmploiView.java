@@ -92,7 +92,7 @@ public class OffreEmploiView extends JFrame {
 
             private void filterTable() {
                 String text = searchField.getText();
-                if (text.trim().length() == 0) {
+                if (text.trim().isEmpty()) {
                     sorter.setRowFilter(null);
                 } else {
                     sorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
@@ -264,12 +264,10 @@ public class OffreEmploiView extends JFrame {
 
                 //ouverture d'une fenêtre pop-up
                 JOptionPane.showMessageDialog(this, scrollPane, "Description de l'offre", JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(this,
-                        "Offre introuvable.",
-                        "Erreur",
-                        JOptionPane.ERROR_MESSAGE);
-            }
+            } else JOptionPane.showMessageDialog(this,
+                    "Offre introuvable.",
+                    "Erreur",
+                    JOptionPane.ERROR_MESSAGE);
 
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this,

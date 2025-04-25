@@ -107,6 +107,19 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
         return false;
     }
 
+    public boolean utilisateurExiste(String email) throws SQLException {
+        String query = "SELECT COUNT(*) FROM demandeurs WHERE e_mail_demandeur = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, email);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        }
+        return false;
+    }
+
     @Override
     public boolean mettreAJourProfil(SessionUtilisateur utilisateur) {
         if (utilisateur.getId() == 0) {

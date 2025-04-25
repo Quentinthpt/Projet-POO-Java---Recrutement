@@ -327,6 +327,72 @@ public class LoginView extends JFrame {
     //ajout des champs de l'inscription dans la bdd
     private void handleRegistration(JTextField[] fields, JPasswordField passwordField) {
         try {
+            //vérification que tous les champs soient remplis
+            String[] labels = {"Nom", "Prénom", "Âge", "Email", "Adresse", "Expérience", "CV", "Mot de passe"};
+            for (int i = 0; i < 6; i++) {
+                if (fields[i].getText().trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(this,
+                            "Veuillez remplir le champ : " + labels[i],
+                            "Champ manquant",
+                            JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+            }
+
+
+            String nom = fields[0].getText().trim();
+            String prenom = fields[1].getText().trim();
+            String email = fields[3].getText().trim();
+
+            //condition pour que les cases nom et prénom ne contiennent que des lettres
+            if (!nom.matches("[a-zA-ZÀ-ÿ\\s]+")) {
+                JOptionPane.showMessageDialog(this,
+                        "Le nom ne doit contenir que des lettres.",
+                        "Nom invalide",
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            if (!prenom.matches("[a-zA-ZÀ-ÿ\\s]+")) {
+                JOptionPane.showMessageDialog(this,
+                        "Le prénom ne doit contenir que des lettres.",
+                        "Prénom invalide",
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            //condition par rapport au format de l'adresse mail
+            if (!email.contains("@") || !email.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) {
+                JOptionPane.showMessageDialog(this,
+                        "Adresse email invalide.",
+                        "Email invalide",
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            //vérification que l'adresse mail n'a pas été utilisée
+            if (utilisateurDAO.utilisateurExiste(email)) {
+                JOptionPane.showMessageDialog(this,
+                        "Cet email est déjà utilisé. Veuillez en choisir un autre.",
+                        "Email déjà utilisé",
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+
+            //condition de l'âge > 0 + nb entier
+            int age;
+            try {
+                age = Integer.parseInt(fields[2].getText().trim());
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this,
+                        "L'âge doit être un nombre entier valide.",
+                        "Âge invalide",
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+
             String cvPath = "cv_default.pdf";
             if (cvFichier != null) {
                 try {
@@ -340,13 +406,27 @@ public class LoginView extends JFrame {
                     JOptionPane.showMessageDialog(this, "Erreur lors de l'enregistrement du fichier CV.");
                     return;
                 }
+            }else{
+                JOptionPane.showMessageDialog(this,
+                        "Veuillez choisir un fichier CV.",
+                        "CV manquant",
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            if (passwordField.getPassword().length == 0) {
+                JOptionPane.showMessageDialog(this,
+                        "Veuillez entrer un mot de passe.",
+                        "Champ manquant",
+                        JOptionPane.WARNING_MESSAGE);
+                return;
             }
 
             Utilisateur newUser = new Utilisateur(
-                    fields[0].getText(),
-                    fields[1].getText(),
-                    Integer.parseInt(fields[2].getText()),
-                    fields[3].getText(),
+                    nom,
+                    prenom,
+                    age,
+                    email,
                     fields[4].getText(),
                     fields[5].getText(),
                     cvPath,
@@ -359,12 +439,12 @@ public class LoginView extends JFrame {
                 JOptionPane.showMessageDialog(this, "Inscription réussie !");
                 cardLayout.show(mainPanel, "connexion");
             }
-        } catch (NumberFormatException e) {
-            //condition sur l'âge
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(this,
-                    "L'âge doit être un nombre valide",
+                    "Une erreur est survenue lors de l'inscription : " + e.getMessage(),
                     "Erreur",
                     JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
         }
     }
 

@@ -362,6 +362,8 @@ public class LoginView extends JFrame {
             }
 
             //condition par rapport au format de l'adresse mail
+            //https://www.geeksforgeeks.org/check-email-address-valid-not-java/
+            //https://howtodoinjava.com/java/regex/java-regex-validate-email-address/
             if (!email.contains("@") || !email.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) {
                 JOptionPane.showMessageDialog(this,
                         "Adresse email invalide.",

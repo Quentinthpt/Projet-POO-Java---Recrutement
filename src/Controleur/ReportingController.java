@@ -6,17 +6,14 @@ import java.util.Map;
 
 import DAO.OffreEmploiDAO;
 import DAO.CandidatureDAO;
-import DAO.AgenceRecrutementDAO;
 
 public class ReportingController {
     private OffreEmploiDAO offreEmploiDAO;
     private CandidatureDAO candidatureDAO;
-    private AgenceRecrutementDAO agenceRecrutementDAO;
 
-    public ReportingController(OffreEmploiDAO offreEmploiDAO, CandidatureDAO candidatureDAO, AgenceRecrutementDAO agenceRecrutementDAO) {
+    public ReportingController(OffreEmploiDAO offreEmploiDAO, CandidatureDAO candidatureDAO) {
         this.offreEmploiDAO = offreEmploiDAO;
         this.candidatureDAO = candidatureDAO;
-        this.agenceRecrutementDAO = agenceRecrutementDAO;
     }
 
     public Map<String, Integer> genererRapportEmploisPopulaires() {
@@ -54,4 +51,3 @@ public class ReportingController {
         return rapport;
     }
 }
-

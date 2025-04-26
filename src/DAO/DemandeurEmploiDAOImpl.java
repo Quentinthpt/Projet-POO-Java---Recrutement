@@ -4,7 +4,6 @@ import Modele.DemandeurEmploi;
 
 import java.sql.*;
 
-import static java.sql.DriverManager.getConnection;
 
 public class DemandeurEmploiDAOImpl {
     private Connection getConnection() throws SQLException {

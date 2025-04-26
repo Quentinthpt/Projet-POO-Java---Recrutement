@@ -1,16 +1,13 @@
 package Controleur;
-import DAO.CategorieDAO;
 import DAO.OffreEmploiDAO;
 import Modele.OffreEmploi;
 
 public class OffreEmploiController {
 
         private OffreEmploiDAO offreEmploiDAO;
-        private CategorieDAO categorieDAO;
 
-        public OffreEmploiController(OffreEmploiDAO offreDAO, CategorieDAO categorieDAO) {
+        public OffreEmploiController(OffreEmploiDAO offreDAO) {
             this.offreEmploiDAO = offreDAO;
-            this.categorieDAO = categorieDAO;
         }
 
         public boolean creerOffre(OffreEmploi offre) {

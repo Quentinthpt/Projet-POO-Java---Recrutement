@@ -349,14 +349,15 @@ public class OffreEmploiView extends JFrame {
                 candidatureDAO.ajouterCandidature(candidature);
 
                 try {
-                    String to = SessionUtilisateur.getInstance().getEmail();
+                    String to = "javarecrutement1@gmail.com";
+                    //String to = SessionUtilisateur.getInstance().getEmail();
                     String subject = "Candidature enregistrée - MatchaJob";
                     String body = """
                                     <h2>Bonjour %s,</h2>
                                     <p>Votre candidature à <strong>%s</strong> a été enregistrée.</p>
                                     <p>Nous vous contacterons si votre profil correspond.</p>
                                     <p>Merci de votre confiance.</p>
-                                  """.formatted(SessionUtilisateur.getInstance().getPrenom(), annonce.getTitre()
+                                  """.formatted(SessionUtilisateur.getInstance().getPrenom(), SessionUtilisateur.getInstance().getNom(), annonce.getTitre()
                     );
 
                     Services.EMAIL.send(to, subject, body);

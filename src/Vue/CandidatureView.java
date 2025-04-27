@@ -119,7 +119,7 @@ public class CandidatureView extends JFrame {
 
         //message de confirmation pour l'action
         int confirmation = JOptionPane.showConfirmDialog(this,
-                "Voulez-vous vraiement supprimer cette candidature ?",
+                "Voulez-vous vraiment supprimer cette candidature ?",
                 "Confirmation",
                 JOptionPane.YES_NO_OPTION);
 

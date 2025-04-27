@@ -393,9 +393,9 @@ public class LoginView extends JFrame {
                     String destDir = "assets/cv/";
                     new File(destDir).mkdirs();
                     String filename = cvFichier.getName();
-                    Path destPath = Paths.get(filename);
+                    Path destPath = Paths.get(destDir + filename);
                     Files.copy(cvFichier.toPath(), destPath, StandardCopyOption.REPLACE_EXISTING);
-                    cvPath = destPath.toString();
+                    cvPath = filename.toString();
                 } catch (IOException ex) {
                     JOptionPane.showMessageDialog(this, "Erreur lors de l'enregistrement du fichier CV.");
                     return;

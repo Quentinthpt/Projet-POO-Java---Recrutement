@@ -54,7 +54,17 @@ public class CandidatureDAOImpl {
             // 🔔 Notifier tous les administrateurs
             NotificationDAOImpl notificationDAO = new NotificationDAOImpl();
             List<Integer> adminIds = notificationDAO.getAllAdminIds(); // à implémenter dans NotificationDAO
-            String message = "Une nouvelle candidature a été envoyée pour l'annonce ID " + candidature.getIdAnnonce();
+            String titreAnnonce = "";
+            String sqlTitre = "SELECT titre_annonce FROM annonce WHERE id_annonce = ?";
+            try (PreparedStatement stmtTitre = conn.prepareStatement(sqlTitre)) {
+                stmtTitre.setInt(1, candidature.getIdAnnonce());
+                ResultSet rsTitre = stmtTitre.executeQuery();
+                if (rsTitre.next()) {
+                    titreAnnonce = rsTitre.getString("titre_annonce");
+                }
+            }
+
+            String message = "Une nouvelle candidature a été envoyée pour l'annonce : " + titreAnnonce + " (ID: " + candidature.getIdAnnonce() + ")";
 
             for (int adminId : adminIds) {
                 notificationDAO.ajouterNotification(adminId, message);

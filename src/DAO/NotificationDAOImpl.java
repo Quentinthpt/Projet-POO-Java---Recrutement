@@ -33,17 +33,6 @@ public class NotificationDAOImpl {
         }
     }
 
-    public void envoyerNotification(int idUtilisateur, String message) {
-        String sql = "INSERT INTO notification (id_utilisateur, message) VALUES (?, ?)";
-        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, idUtilisateur);
-            stmt.setString(2, message);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
     public List<Notification> getNotificationsNonLues(int idUtilisateur) {
         List<Notification> list = new ArrayList<>();
         String sql = "SELECT * FROM notification WHERE id_utilisateur = ? AND lu = false ORDER BY date_notification DESC";
@@ -116,17 +105,5 @@ public class NotificationDAOImpl {
         }
         return 0;
     }
-
-    public void marquerToutCommeLu(int idUtilisateur) {
-        String sql = "UPDATE notification SET lu = true WHERE id_utilisateur = ?";
-        try (Connection conn = getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, idUtilisateur);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
 
 }

@@ -1,9 +1,5 @@
 package DAO;
 
-import Modele.DemandeurEmploi;
-import Modele.Utilisateur;
-
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;

@@ -5,6 +5,11 @@ import DAO.UtilisateurDAOImpl;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 public class ProfilModifierView extends JFrame {
     public ProfilModifierView() {
@@ -40,7 +45,6 @@ public class ProfilModifierView extends JFrame {
         JTextField adresseField = new JTextField(session.getAdresse());
         JTextField ageField = new JTextField(String.valueOf(session.getAge()));
         JTextField experienceField = new JTextField(session.getExperience());
-        //JTextField cvField = new JTextField(session.getCv());
 
 
         JTextField cvField = new JTextField(session.getCv());
@@ -51,15 +55,15 @@ public class ProfilModifierView extends JFrame {
             JFileChooser fileChooser = new JFileChooser();
             int result = fileChooser.showOpenDialog(this);
             if (result == JFileChooser.APPROVE_OPTION) {
-                java.io.File selectedFile = fileChooser.getSelectedFile();
+                File selectedFile = fileChooser.getSelectedFile();
                 try {
                     // Crée le dossier assets/cv s'il n'existe pas
-                    java.nio.file.Path destDir = java.nio.file.Paths.get("assets/cv");
-                    java.nio.file.Files.createDirectories(destDir);
+                    Path destDir = Paths.get("assets/cv");
+                    Files.createDirectories(destDir);
 
                     // Copie le fichier dans le dossier
-                    java.nio.file.Path destPath = destDir.resolve(selectedFile.getName());
-                    java.nio.file.Files.copy(selectedFile.toPath(), destPath, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                    Path destPath = destDir.resolve(selectedFile.getName());
+                    Files.copy(selectedFile.toPath(), destPath, StandardCopyOption.REPLACE_EXISTING);
 
                     cvField.setText(selectedFile.getName()); // Met à jour le champ texte avec le nom du fichier
                 } catch (Exception ex) {
@@ -81,7 +85,6 @@ public class ProfilModifierView extends JFrame {
             panel.add(new JLabel(labels[i] + " :"), gbc);
 
             gbc.gridx = 1;
-            //panel.add(fields[i], gbc);
 
             if (i == 6) { // Pour le champ CV
                 JPanel cvPanel = new JPanel(new BorderLayout(5, 0));

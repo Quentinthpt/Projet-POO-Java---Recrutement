@@ -67,7 +67,7 @@ public class MainPage extends JFrame {
         int imageHeight = 300;
 
         // Case 1.1 - Image d'accroche
-        ImageIcon corps_1_1 = new ImageIcon("src/images/groupe.jpg");
+        ImageIcon corps_1_1 = new ImageIcon("assets/images/groupe.jpg");
         corps_1_1 = resizeImage(corps_1_1, imageWidth, imageHeight);
         JLabel img_1_1 = new JLabel(corps_1_1, JLabel.CENTER);
         img_1_1.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
@@ -88,7 +88,7 @@ public class MainPage extends JFrame {
         corps_de_la_page.add(corps_1_2);
 
         // Case 2.1 - Deuxième image
-        ImageIcon corps_2_1 = new ImageIcon("src/images/marche.jpeg");
+        ImageIcon corps_2_1 = new ImageIcon("assets/images/marche.jpeg");
         corps_2_1 = resizeImage(corps_2_1, imageWidth, imageHeight);
         JLabel img_2_1 = new JLabel(corps_2_1, JLabel.CENTER);
         img_2_1.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));

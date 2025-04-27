@@ -56,7 +56,7 @@ public class FooterComponent extends JPanel {
     }
 
     private JPanel createInteractiveMapPanel() {
-        ImageIcon originalIcon = new ImageIcon("src/images/ECE_plan.png");
+        ImageIcon originalIcon = new ImageIcon("assets/images/ECE_plan.png");
         Image scaledImage = originalIcon.getImage().getScaledInstance(350, 150, Image.SCALE_SMOOTH);
         ImageIcon mapIcon = new ImageIcon(scaledImage);
 

@@ -80,7 +80,6 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
                 );
                 demandeur.setId(rs.getInt("id_demandeurs"));
                 return demandeur;
-                //return new Utilisateur(rs.getString("nom_demandeur"), rs.getString("prenom_demandeur"), email, password, "Demandeur");
             }
         } catch (SQLException e){
             e.printStackTrace();

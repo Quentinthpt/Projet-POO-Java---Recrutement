@@ -98,12 +98,10 @@ public class ListeUtilisateursView extends JFrame {
 
         JButton refreshButton = createStyledButton("Actualiser", bleuFonce, e -> loadUtilisateurs());
         JButton supprimerButton = createStyledButton("Supprimer", new Color(200, 50, 50), e -> supprimerUtilisateur());
-        //JButton modifierStatutButton = createStyledButton("Modifier le statut", new Color(50, 150, 50), e -> modifierStatutDemandeur());
         JButton voirCvButton = createStyledButton("Voir CV", bleuClair, e -> voirCVUtilisateur());
 
         buttonPanel.add(refreshButton);
         buttonPanel.add(supprimerButton);
-        //buttonPanel.add(modifierStatutButton);
         buttonPanel.add(voirCvButton);
 
         return buttonPanel;
@@ -275,64 +273,4 @@ public class ListeUtilisateursView extends JFrame {
         }
     }
 
-
-    private void modifierStatutDemandeur() {
-        int selectedRow = utilisateursTable.getSelectedRow();
-        if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this,
-                    "Veuillez sélectionner un demandeur d'emploi",
-                    "Aucune sélection",
-                    JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        String type = (String) tableModel.getValueAt(selectedRow, 0);
-        if (!"Demandeur".equals(type)) {
-            JOptionPane.showMessageDialog(this,
-                    "Vous ne pouvez modifier que le statut des demandeurs d'emploi",
-                    "Sélection incorrecte",
-                    JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        String email = (String) tableModel.getValueAt(selectedRow, 3);
-        String statutActuel = (String) tableModel.getValueAt(selectedRow, 8);
-
-        // Options de statut possibles
-        String[] options = {"En attente", "Accepté", "Refusé", "En cours de traitement"};
-
-        String nouveauStatut = (String) JOptionPane.showInputDialog(this,
-                "Choisissez le nouveau statut pour le demandeur :\nEmail: " + email,
-                "Modification du statut",
-                JOptionPane.QUESTION_MESSAGE,
-                null,
-                options,
-                statutActuel);
-
-        if (nouveauStatut != null && !nouveauStatut.equals(statutActuel)) {
-            try {
-                UtilisateurDAOImpl dao = new UtilisateurDAOImpl();
-                boolean success = dao.modifierStatutDemandeur(email, nouveauStatut);
-
-                if (success) {
-                    JOptionPane.showMessageDialog(this,
-                            "Statut modifié avec succès!",
-                            "Succès",
-                            JOptionPane.INFORMATION_MESSAGE);
-                    loadUtilisateurs(); // Rafraîchir la liste
-                } else {
-                    JOptionPane.showMessageDialog(this,
-                            "Échec de la modification du statut",
-                            "Erreur",
-                            JOptionPane.ERROR_MESSAGE);
-                }
-            } catch (SQLException e) {
-                JOptionPane.showMessageDialog(this,
-                        "Erreur lors de la modification du statut: " + e.getMessage(),
-                        "Erreur",
-                        JOptionPane.ERROR_MESSAGE);
-                e.printStackTrace();
-            }
-        }
-    }
 }

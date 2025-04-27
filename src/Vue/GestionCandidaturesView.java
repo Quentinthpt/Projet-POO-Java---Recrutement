@@ -164,14 +164,6 @@ public class GestionCandidaturesView extends JFrame {
         }
     }
 
-    private void ajouterCandidature() {
-        // TODO: Implémenter l'ajout d'une nouvelle candidature
-        JOptionPane.showMessageDialog(this,
-                "Fonctionnalité d'ajout à implémenter",
-                "Information",
-                JOptionPane.INFORMATION_MESSAGE);
-    }
-
     private void modifierCandidature() {
         int selectedRow = candidaturesTable.getSelectedRow();
         if (selectedRow == -1) {

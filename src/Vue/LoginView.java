@@ -223,14 +223,6 @@ public class LoginView extends JFrame {
             } else {
                 panel.add(fields[i], gbc);
             }
-            /*
-            if (i == labels.length - 1) {
-                panel.add(passwordField, gbc);
-            } else {
-                panel.add(fields[i], gbc);
-            }
-
-             */
         }
 
         //positionnement des boutons
@@ -401,7 +393,7 @@ public class LoginView extends JFrame {
                     String destDir = "assets/cv/";
                     new File(destDir).mkdirs();
                     String filename = cvFichier.getName();
-                    Path destPath = Paths.get(destDir + filename);
+                    Path destPath = Paths.get(filename);
                     Files.copy(cvFichier.toPath(), destPath, StandardCopyOption.REPLACE_EXISTING);
                     cvPath = destPath.toString();
                 } catch (IOException ex) {

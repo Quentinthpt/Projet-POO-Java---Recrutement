@@ -25,7 +25,7 @@ public class HeaderComponent extends JPanel {
         setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 
         // Logo
-        ImageIcon logoIcon = new ImageIcon("src/images/telechargement2.png");
+        ImageIcon logoIcon = new ImageIcon("assets/images/telechargement2.png");
         Image scaledLogo = logoIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
         logoIcon = new ImageIcon(scaledLogo);
         JLabel logoLabel = new JLabel(" MatchaJob", logoIcon, JLabel.LEFT);
